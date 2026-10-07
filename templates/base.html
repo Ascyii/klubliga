@@ -1,0 +1,43 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}{{ league_name }}{% endblock %} · {{ season.year }}</title>
+  <link rel="stylesheet" href="{% static 'league/app.css' %}">
+  <script src="{% static 'league/app.js' %}" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-title">
+      <a href="{% url 'league:home' %}" class="brand">{{ league_name }}</a>
+      <span class="season">{{ season.year }}</span>
+      {% if user.is_authenticated %}<span class="username">{{ user.get_full_name }}</span>{% endif %}
+    </div>
+    {% if user.is_authenticated %}
+    <nav class="nav">
+      {% with name=request.resolver_match.url_name %}
+      <a href="{% url 'league:home' %}" {% if name == 'home' %}aria-current="page"{% endif %}>Home</a>
+      <a href="{% url 'league:matches' %}" {% if name == 'matches' or name == 'match' %}aria-current="page"{% endif %}>Matches</a>
+      {% if user.is_staff %}
+      <a href="{% url 'league:groups' %}" {% if name == 'groups' %}aria-current="page"{% endif %}>Groups</a>
+      <a href="{% url 'league:settings' %}" {% if name == 'settings' %}aria-current="page"{% endif %}>Settings</a>
+      {% endif %}
+      {% endwith %}
+      <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+        {% csrf_token %}<button type="submit" class="link">Logout</button>
+      </form>
+    </nav>
+    {% endif %}
+  </header>
+  <main>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}<li class="msg msg-{{ message.tags }}">{{ message }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
