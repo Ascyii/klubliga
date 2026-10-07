@@ -118,7 +118,9 @@ least once (confirmed email) can be chosen as a doubles partner.
 | `attempts` | wrong code entries; the token dies after 5 |
 
 Only the newest token of a user is valid; requesting a new one invalidates
-the older ones. A new code can be requested at most once per minute.
+the older ones. A new code can be requested at most once per minute, and at
+most 20 wrong codes per user are accepted within 24 hours (across all tokens),
+which keeps guessing a 6-digit code impractical.
 
 ### Season (`league.Season`)
 
@@ -366,3 +368,6 @@ Each step ends with a commit.
 9. **Demo data** – `demo` management command.
 10. **Tests** – full unit and view test suite, fixes found by it.
 11. **Final review** – documentation updated to match the result.
+
+All steps are implemented; the suite currently has 109 tests
+(`uv run manage.py test`).
