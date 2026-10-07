@@ -9,7 +9,8 @@ interface, the design decisions with their reasons, and the development plan.
 - **Small and server-rendered.** Idiomatic Django with Django templates, plain
   HTML/CSS and a little vanilla JavaScript. No JS framework, no CSS framework.
   Where client-side behaviour is really needed, a native Web Component is used.
-- **No extra packages.** The only runtime dependency is Django. Tests use
+- **No extra packages.** The app itself needs only Django. For deployment,
+  WhiteNoise (static files) and gunicorn (WSGI server) are added. Tests use
   Django's own test runner.
 - **Tooling:** `uv` for Python and dependencies, the usual `manage.py`
   commands, SQLite as the database.
@@ -40,7 +41,8 @@ These words are used consistently in code, UI and documentation.
 
 ```
 klubliga/
-├── pyproject.toml          uv project, single dependency: Django
+├── pyproject.toml          uv project: Django, WhiteNoise, gunicorn
+├── justfile                dev / test / deploy / serve recipes
 ├── manage.py
 ├── config/                 project package: settings, root urls, wsgi/asgi
 ├── accounts/               users and password-less login

@@ -192,6 +192,8 @@ uv run manage.py demo                    # fill the current season with demo dat
 uv run manage.py test                    # run the test suite
 ```
 
+The same tasks are available as `just dev` and `just test` (see below).
+
 The Django admin (raw database access for admins) is at `/django-admin/`.
 
 ### Configuration
@@ -209,17 +211,28 @@ Configuration is done through environment variables:
 | `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS` | SMTP server. Without `EMAIL_HOST`, mails go to the console. | – |
 | `DEFAULT_FROM_EMAIL` | Sender address of login mails | `klubliga@localhost` |
 
-### Production in short
+### Production
+
+Deployment uses [just](https://just.systems/). Static files are collected,
+compressed and served by the app itself via WhiteNoise; the app runs under
+gunicorn.
 
 ```bash
-export DJANGO_DEBUG=0 DJANGO_SECRET_KEY=... DJANGO_ALLOWED_HOSTS=liga.example.org
-uv run manage.py migrate
-uv run manage.py collectstatic           # into ./staticfiles
+cp .env.example .env      # then fill in secret key, host name, SMTP …
+just deploy               # uv sync, migrate, collectstatic, deployment checks
+just serve                # gunicorn on HOST:PORT (default 127.0.0.1:8000)
+just up                   # both in one go
 ```
 
-Run the app behind a web server (e.g. Caddy or nginx) that terminates HTTPS,
-serves `/static/` from `./staticfiles` and proxies everything else to a WSGI
-server such as gunicorn (`uv add gunicorn`,
-`uv run gunicorn config.wsgi`).
+`just deploy` refuses to run unless `DJANGO_DEBUG=0`, and its checks fail if no
+SMTP server (`EMAIL_HOST`) is configured, because nobody could log in.
+
+In production the session and CSRF cookies are HTTPS-only, so put a reverse
+proxy (e.g. Caddy or nginx) in front that terminates HTTPS, redirects HTTP to
+HTTPS and forwards to gunicorn with the `X-Forwarded-Proto` header set. Static
+files need no extra proxy configuration. To keep the app running, start
+`just serve` from a systemd service in the project directory.
+
+Other recipes: `just dev` (development server), `just test`, `just` (list).
 
 More technical details are in [docs/SPECIFICATION.md](docs/SPECIFICATION.md).
