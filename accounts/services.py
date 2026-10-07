@@ -2,9 +2,10 @@
 
 import hashlib
 import secrets
+from datetime import timedelta
 
 from django.core.mail import send_mail
-from django.db.models import F
+from django.db.models import F, Sum
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
@@ -63,6 +64,9 @@ def verify_code(user, code, now=None):
     now = now or timezone.now()
     token = user.login_tokens.first()
     if token is None or not token.is_usable(now):
+        return False
+    recent = user.login_tokens.filter(created_at__gt=now - timedelta(days=1))
+    if (recent.aggregate(total=Sum("attempts"))["total"] or 0) >= LoginToken.MAX_DAILY_ATTEMPTS:
         return False
     if constant_time_compare(hash_secret(code.strip()), token.code_hash):
         token.used_at = now

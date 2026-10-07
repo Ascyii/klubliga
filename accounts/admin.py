@@ -1,15 +1,20 @@
 from django.contrib import admin
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
+from django.urls import reverse
 
 from .models import LoginToken, User
 
 
 def admin_login(request, extra_context=None):
     """The Django admin uses the app's password-less login."""
+    next_url = request.GET.get("next") or reverse("admin:index")
     if request.user.is_authenticated:
+        if request.user.is_staff:
+            return redirect(next_url)
         raise PermissionDenied
-    return redirect_to_login(request.get_full_path())
+    return redirect_to_login(next_url)
 
 
 admin.site.login = admin_login

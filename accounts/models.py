@@ -77,6 +77,7 @@ class LoginToken(models.Model):
     VALIDITY = timedelta(minutes=30)
     RESEND_INTERVAL = timedelta(seconds=60)
     MAX_ATTEMPTS = 5
+    MAX_DAILY_ATTEMPTS = 20  # wrong codes per user and 24 hours, across all tokens
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="login_tokens")
     code_hash = models.CharField(max_length=64)
