@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ match }}{% endblock %}
+{% block content %}
+<p class="small"><a href="{% url 'league:matches' %}?t={{ match.tournament }}&amp;season={{ match.season.year }}">← {{ match.get_tournament_display }} {{ match.season.year }}</a></p>
+<h1>{{ match.stage_label }}</h1>
+
+<section class="card">
+  <div class="spread">
+    <span class="badge {% if match.status == 'pending' %}badge-warn{% elif match.is_decided %}badge-ok{% endif %}">{{ match.get_status_display }}</span>
+    {% if match.status == "played" %}<strong style="font-size:1.2rem">{{ match.score }}</strong>{% endif %}
+  </div>
+  {% if not match.counts %}<p class="small muted">This match no longer counts: an entry withdrew or changed groups.</p>{% endif %}
+  {% for entry, players in sides %}
+  <div style="margin-top:.75rem">
+    <strong>{{ entry }}</strong>{% if match.winner_id == entry.pk %} <span class="badge badge-ok">winner</span>{% endif %}
+    {% if entry.withdrawn_at %} <span class="badge badge-danger">withdrawn</span>{% endif %}
+    <ul class="small" style="margin:.2rem 0 0;padding-left:1.1rem">
+      {% for p in players %}<li>{{ p.get_full_name }} · <a href="mailto:{{ p.email }}">{{ p.email }}</a></li>{% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+  {% if match.reported_at %}<p class="small muted">Entered {{ match.reported_at|date:"j M Y, H:i" }}{% if match.reported_by %} by {{ match.reported_by.get_full_name }}{% endif %}.</p>{% endif %}
+</section>
+
+{% if form %}
+<section class="card">
+  <h2 style="margin-top:0">{% if match.status == "pending" %}Enter result{% else %}Change result{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% if form.outcome %}
+    <div class="field">{{ form.outcome.label_tag }}{{ form.outcome }}{{ form.outcome.errors }}</div>
+    {% endif %}
+    <score-input data-best-of="{{ form.rules.best_of }}" data-name1="{{ match.entry1 }}" data-name2="{{ match.entry2 }}">
+      <div class="score-grid">
+        <span></span><span class="head">{{ match.entry1 }}</span><span class="head">{{ match.entry2 }}</span>
+        {% for row in form.set_rows %}
+        <div class="set-row">
+          <span class="set-label">{{ row.label }}{% if row.tiebreak %} <span class="muted small">({{ tie_break_label }})</span>{% endif %}</span>
+          {{ row.side1 }}{{ row.side2 }}
+        </div>
+        {% endfor %}
+      </div>
+      <p class="score-status" aria-live="polite"></p>
+    </score-input>
+    <button type="submit" class="block">Save result</button>
+  </form>
+</section>
+{% elif lock_reason %}
+<p class="msg">{{ lock_reason }}</p>
+{% endif %}
+{% endblock %}

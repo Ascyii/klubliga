@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Groups{% endblock %}
+{% block content %}
+<h1>Groups</h1>
+<nav class="tabs" aria-label="Tournaments">
+  {% for code, label, count in tabs %}
+  <a href="?t={{ code }}"{% if code == tournament %} aria-current="page"{% endif %}>{{ label }} ({{ count }})</a>
+  {% endfor %}
+</nav>
+
+<section class="card">
+  <h2 style="margin-top:0">{{ tournament_label }}</h2>
+  <p class="small muted">
+    {{ entries|length }} active entr{{ entries|length|pluralize:"y,ies" }} ·
+    Group A: {{ group_sizes.A }} · Group B: {{ group_sizes.B }}
+    {% if waiting %} · <strong>{{ waiting|length }} not placed</strong>{% endif %}<br>
+    Suggested: {{ suggested }} group{{ suggested|pluralize }}.
+  </p>
+  {% if locked %}
+  <p class="msg msg-warning">The knockout stage already has results – the groups are locked.</p>
+  {% endif %}
+
+  {% if entries %}
+  <form method="post">
+    {% csrf_token %}
+    {% if not has_results %}
+    <div class="row" style="margin-bottom:1rem">
+      <button type="submit" name="action" value="random1" class="secondary small" data-confirm="Put all entries into one group? Existing assignments are replaced.">Random: 1 group</button>
+      <button type="submit" name="action" value="random2" class="secondary small" data-confirm="Split all entries randomly into two groups? Existing assignments are replaced.">Random: 2 groups</button>
+    </div>
+    {% endif %}
+    {% for entry in entries %}
+    <div class="entry-row">
+      <span>
+        {{ entry }}
+        {% if not entry.group_id %}<span class="badge badge-warn">{% if season.is_started %}waiting{% else %}not placed{% endif %}</span>{% endif %}
+      </span>
+      <select name="entry-{{ entry.pk }}" aria-label="Group of {{ entry }}"{% if locked %} disabled{% endif %}>
+        <option value="">–</option>
+        <option value="A"{% if entry.group.name == "A" %} selected{% endif %}>Group A</option>
+        <option value="B"{% if entry.group.name == "B" %} selected{% endif %}>Group B</option>
+      </select>
+      <span class="actions">
+        <button type="submit" class="danger small" formaction="{% url 'league:withdraw' entry.pk %}?next={{ request.get_full_path|urlencode }}"
+                data-confirm="Remove {{ entry }} from {{ tournament_label }}? Open matches are deleted."
+                {% if not entry.can_remove %}disabled title="Already in the knockout stage"{% endif %}>Remove</button>
+      </span>
+    </div>
+    {% endfor %}
+    {% if not locked %}
+    <button type="submit" name="action" value="save" style="margin-top:1rem">Save groups</button>
+    {% endif %}
+  </form>
+  {% else %}
+  <p class="muted">No entries in this tournament.</p>
+  {% endif %}
+</section>
+
+{% if withdrawn %}
+<section class="card">
+  <h3>Withdrawn</h3>
+  <p class="small muted">{% for entry in withdrawn %}{{ entry }} ({{ entry.withdrawn_at|date:"j M" }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="card">
+  {% if season.is_started %}
+  <div class="spread"><strong>The league is running.</strong> <span class="badge badge-ok">since {{ season.started_at|date:"j M" }}</span></div>
+  <p class="muted small">Arrange your matches with your opponents and enter the results below. Late entries are admitted by the organiser.</p>
+  {% else %}
+  <div class="spread"><strong>Entries are open.</strong> <span class="badge badge-warn">not started yet</span></div>
+  <p class="muted small">Enter the tournaments you want to play. The organiser will form the groups and start the league.</p>
+  {% endif %}
+</section>
+
+<h2>My entries</h2>
+<section class="card">
+  {% if entries %}
+  <ul class="match-list">
+    {% for entry in entries %}
+    <li class="spread" style="padding:.55rem 0">
+      <span>
+        <strong>{{ entry.get_tournament_display }}</strong><br>
+        <span class="small {% if not entry.is_active %}muted{% endif %}">{% if entry.player2 %}{{ entry.player1.get_full_name }} &amp; {{ entry.player2.get_full_name }}{% else %}Singles{% endif %}</span>
+      </span>
+      <span class="row">
+        <span class="badge {% if entry.status == 'placed' %}badge-ok{% elif entry.status == 'waiting' %}badge-warn{% elif entry.status == 'withdrawn' %}badge-danger{% endif %}">{{ entry.status_label }}</span>
+        {% if entry.can_withdraw %}
+        <form method="post" action="{% url 'league:withdraw' entry.pk %}" class="inline">
+          {% csrf_token %}
+          <button type="submit" class="danger small" data-confirm="Withdraw from {{ entry.get_tournament_display }}? Your open matches will be removed.">Withdraw</button>
+        </form>
+        {% endif %}
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">You have not entered any tournament yet.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h3>New entry</h3>
+  <form method="post" data-entry-form data-my-sex="{{ user.sex }}">
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <p class="small muted" data-entry-preview></p>
+    <button type="submit">Enter</button>
+  </form>
+</section>
+
+{% if my_groups %}
+<h2>My groups</h2>
+{% for g in my_groups %}
+<section class="card">
+  <div class="spread">
+    <h3 style="margin:0">{{ g.group.get_tournament_display }} · Group {{ g.group.name }}</h3>
+    <a class="small" href="{% url 'league:matches' %}?t={{ g.group.tournament }}">All matches</a>
+  </div>
+  {% include "league/_standings.html" with rows=g.rows %}
+</section>
+{% endfor %}
+{% endif %}
+
+<h2>My matches {% if open_count %}<span class="badge badge-warn">{{ open_count }} open</span>{% endif %}</h2>
+<section class="card">
+  {% if matches %}
+  <ul class="match-list">
+    {% for m in matches %}<li>{% include "league/_match.html" with show_tournament=True %}</li>{% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">Your matches appear here once you have been placed in a group.</p>
+  {% endif %}
+</section>
+{% endblock %}

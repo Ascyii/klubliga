@@ -1,0 +1,22 @@
+<div class="table-wrap">
+<table class="standings">
+  <thead>
+    <tr><th>#</th><th>Entry</th><th class="num" title="Matches played">M</th><th class="num" title="Won">W</th><th class="num" title="Lost">L</th><th class="num">Sets</th><th class="num">Games</th></tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr{% if row.is_mine %} class="me"{% endif %}>
+      <td>{{ row.rank }}</td>
+      <td>{{ row.entry }}</td>
+      <td class="num">{{ row.played }}</td>
+      <td class="num">{{ row.won }}</td>
+      <td class="num">{{ row.lost }}</td>
+      <td class="num">{{ row.sets_for }}:{{ row.sets_against }}</td>
+      <td class="num">{{ row.games_for }}:{{ row.games_against }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7" class="muted">No entries yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>

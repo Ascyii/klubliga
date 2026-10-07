@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ tournament_label }}{% endblock %}
+{% block content %}
+<div class="spread">
+  <h1>{{ tournament_label }}{% if not view_season.is_current %} {{ view_season.year }}{% endif %}</h1>
+  {% if seasons|length > 1 %}
+  <form method="get" data-autosubmit class="row">
+    <input type="hidden" name="t" value="{{ tournament }}">
+    <label for="season-select" class="small" style="margin:0">Season</label>
+    <select id="season-select" name="season" style="width:auto">
+      {% for s in seasons %}<option value="{{ s.year }}"{% if s.pk == view_season.pk %} selected{% endif %}>{{ s.year }}</option>{% endfor %}
+    </select>
+    <noscript><button type="submit" class="small">Show</button></noscript>
+  </form>
+  {% endif %}
+</div>
+
+<nav class="tabs" aria-label="Tournaments">
+  {% for code, label in tournaments %}
+  <a href="?t={{ code }}&amp;season={{ view_season.year }}"{% if code == tournament %} aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+
+{% for g in groups %}
+<section class="card">
+  <div class="spread">
+    <h2 style="margin:0">Group {{ g.group.name }}</h2>
+    {% if g.complete %}<span class="badge badge-ok">finished</span>{% elif g.open %}<span class="badge badge-warn">{{ g.open }} open</span>{% endif %}
+  </div>
+  {% include "league/_standings.html" with rows=g.rows %}
+  {% if can_manage and g.open %}
+  <form method="post" action="{% url 'league:close' %}" style="margin-top:.75rem">
+    {% csrf_token %}
+    <input type="hidden" name="scope" value="group"><input type="hidden" name="group" value="{{ g.group.pk }}">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit" class="secondary small" data-confirm="Close the group phase of Group {{ g.group.name }}? {{ g.open }} open match(es) will be marked as not played.">Close group phase</button>
+  </form>
+  {% endif %}
+</section>
+{% empty %}
+<p class="card muted">No groups have been formed for this tournament{% if view_season.is_current %} yet{% endif %}.</p>
+{% endfor %}
+
+{% if can_manage and any_open_group %}
+<form method="post" action="{% url 'league:close' %}" class="card">
+  {% csrf_token %}
+  <input type="hidden" name="scope" value="tournament"><input type="hidden" name="tournament" value="{{ tournament }}">
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <div class="spread">
+    <span class="small muted">Admin: no more group matches will be played in {{ tournament_label }}?</span>
+    <button type="submit" class="secondary small" data-confirm="Close the group phase of all groups in {{ tournament_label }}? All open group matches will be marked as not played.">Close group phase of tournament</button>
+  </div>
+</form>
+{% endif %}
+
+{% if bracket %}
+<h2>Knockout stage</h2>
+<div class="bracket">
+  {% for slot in bracket %}
+  <div class="ko">
+    <h3>{{ slot.title }}</h3>
+    {% if slot.match %}
+    <ul class="match-list"><li>{% include "league/_match.html" with m=slot.match %}</li></ul>
+    {% else %}
+    <p class="placeholder small">{{ slot.label1 }} – {{ slot.label2 }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<h2>Matches</h2>
+<form method="get" class="card filters" data-autosubmit>
+  <input type="hidden" name="t" value="{{ tournament }}">
+  <input type="hidden" name="season" value="{{ view_season.year }}">
+  <div>
+    <label for="f-stage" class="small">Stage</label>
+    <select id="f-stage" name="stage">
+      <option value="">All</option>
+      {% for name in group_names %}<option value="{{ name }}"{% if filters.stage == name %} selected{% endif %}>Group {{ name }}</option>{% endfor %}
+      <option value="ko"{% if filters.stage == "ko" %} selected{% endif %}>Knockout</option>
+    </select>
+  </div>
+  <div>
+    <label for="f-status" class="small">Status</label>
+    <select id="f-status" name="status">
+      <option value="">All</option>
+      <option value="open"{% if filters.status == "open" %} selected{% endif %}>Open</option>
+      <option value="done"{% if filters.status == "done" %} selected{% endif %}>Finished</option>
+    </select>
+  </div>
+  <div class="wide">
+    <label for="f-q" class="small">Player</label>
+    <input id="f-q" type="search" name="q" value="{{ filters.q }}" placeholder="Name">
+  </div>
+  <div>
+    <label class="checkbox small"><input type="checkbox" name="mine" value="1"{% if filters.mine %} checked{% endif %}> Only mine</label>
+    <noscript><button type="submit" class="small">Filter</button></noscript>
+  </div>
+</form>
+<section class="card">
+  {% if match_list %}
+  <ul class="match-list">
+    {% for m in match_list %}<li>{% include "league/_match.html" %}</li>{% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">No matches found.</p>
+  {% endif %}
+</section>
+{% endblock %}
