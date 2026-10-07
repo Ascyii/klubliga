@@ -244,3 +244,7 @@ a.match:hover { background: var(--accent-soft); }
 .filters { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; align-items: end; }
 .filters .wide { grid-column: 1 / -1; }
 @media (min-width: 40rem) { .filters { grid-template-columns: repeat(4, 1fr); } .filters .wide { grid-column: auto; } }
+
+/* Radio groups rendered by Django's RadioSelect */
+.field div:has(> div > label > input[type=radio]) { display: flex; gap: .4rem 1.25rem; flex-wrap: wrap; }
+.field label:has(> input[type=radio]) { font-weight: normal; display: inline-flex; gap: .4rem; align-items: center; min-height: 2.2rem; }

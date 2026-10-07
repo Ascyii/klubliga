@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Log in</h1>
+  <p class="muted">Enter your email address. We will send you a login code – no password needed.</p>
+  <form method="post">
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <button type="submit" class="block">Send login code</button>
+  </form>
+  <p class="small muted">New here? <a href="{% url 'accounts:register' %}">Register</a></p>
+</div>
+{% endblock %}
