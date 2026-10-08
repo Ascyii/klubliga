@@ -37,7 +37,9 @@ doubles.
 3. You receive an email with a **6-digit login code** and a **login link**.
    Type in the code or tap the link – you are in.
 
-There are no passwords. Your device stays logged in for a year.
+There are no passwords. Your device stays logged in for a year. Only if
+somebody else wants to use your device (e.g. to enter a result), log out with
+the small link at the bottom of the page.
 
 ### Logging in on another device
 

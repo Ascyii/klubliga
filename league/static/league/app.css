@@ -88,6 +88,10 @@ h3 { font-size: 1.05rem; margin: 1.25rem 0 .5rem; }
 }
 .nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 
+/* Footer: logging out is rarely needed, so it is kept out of the way. */
+.footer { max-width: 52rem; margin: 1rem auto 2rem; padding: 0 var(--gap); text-align: center; }
+.footer button.link { padding: 0; color: inherit; font-size: inherit; text-decoration: underline; }
+
 /* Building blocks --------------------------------------------------------- */
 .card {
   background: var(--surface);

@@ -304,7 +304,9 @@ entries, otherwise 1.
 ### UI notes
 
 - Header: league name, season year, user name; navigation Home · Matches ·
-  (Groups · Settings) · Logout.
+  (Groups · Settings). Logging out is a small link in the footer (with a
+  confirmation): devices stay logged in, logging out is only needed to let
+  someone else use the device.
 - One stylesheet with CSS custom properties, light/dark via
   `prefers-color-scheme`, system fonts, touch-sized controls.
 - `app.js` provides

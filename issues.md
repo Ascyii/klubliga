@@ -1,2 +1,1 @@
 - Full i18n of the frontend to german
-- Make it not so present to logout. Ideally the user should never logout (the only reason is when the user wants to enter a game for another person from his device)

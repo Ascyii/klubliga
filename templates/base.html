@@ -25,9 +25,6 @@
       <a href="{% url 'league:settings' %}" {% if name == 'settings' %}aria-current="page"{% endif %}>Settings</a>
       {% endif %}
       {% endwith %}
-      <form method="post" action="{% url 'accounts:logout' %}" class="inline">
-        {% csrf_token %}<button type="submit" class="link">Logout</button>
-      </form>
     </nav>
     {% endif %}
   </header>
@@ -39,5 +36,14 @@
     {% endif %}
     {% block content %}{% endblock %}
   </main>
+  {% if user.is_authenticated %}
+  {# Devices stay logged in; logging out is only needed to let someone else use this device. #}
+  <footer class="footer small muted">
+    Logged in as {{ user.email }}.
+    <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+      {% csrf_token %}<button type="submit" class="link" data-confirm="Log out on this device? To log in again you need a new code by email.">Log out</button>
+    </form>
+  </footer>
+  {% endif %}
 </body>
 </html>
