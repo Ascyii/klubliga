@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block title %}{{ match }}{% endblock %}
+{% block title %}{% blocktranslate with entry1=match.entry1 entry2=match.entry2 %}{{ entry1 }} vs {{ entry2 }}{% endblocktranslate %}{% endblock %}
 {% block content %}
 <p class="small"><a href="{% url 'league:matches' %}?t={{ match.tournament }}&amp;season={{ match.season.year }}">← {{ match.get_tournament_display }} {{ match.season.year }}</a></p>
 <h1>{{ match.stage_label }}</h1>
@@ -20,7 +20,7 @@
     </ul>
   </div>
   {% endfor %}
-  {% if match.reported_at %}<p class="small muted">{% if match.reported_by %}{% blocktranslate with date=match.reported_at|date:"j. M Y, H:i" name=match.reported_by.get_full_name %}Entered {{ date }} by {{ name }}.{% endblocktranslate %}{% else %}{% blocktranslate with date=match.reported_at|date:"j. M Y, H:i" %}Entered {{ date }}.{% endblocktranslate %}{% endif %}</p>{% endif %}
+  {% if match.reported_at %}<p class="small muted">{% if match.reported_by %}{% blocktranslate with date=match.reported_at|date:"DATETIME_FORMAT" name=match.reported_by.get_full_name %}Entered {{ date }} by {{ name }}.{% endblocktranslate %}{% else %}{% blocktranslate with date=match.reported_at|date:"DATETIME_FORMAT" %}Entered {{ date }}.{% endblocktranslate %}{% endif %}</p>{% endif %}
 </section>
 
 {% if form %}

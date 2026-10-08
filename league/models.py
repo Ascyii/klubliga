@@ -111,8 +111,7 @@ class Group(models.Model):
         ]
 
     def __str__(self):
-        return gettext("%(tournament)s – Group %(name)s") % {
-            "tournament": self.get_tournament_display(), "name": self.name}
+        return f"{self.tournament} – Group {self.name}"
 
     def active_entries(self):
         return self.entries.filter(withdrawn_at__isnull=True).select_related("player1", "player2")
@@ -257,7 +256,7 @@ class Match(models.Model):
         ]
 
     def __str__(self):
-        return gettext("%(entry1)s vs %(entry2)s") % {"entry1": self.entry1, "entry2": self.entry2}
+        return f"{self.entry1} vs {self.entry2}"
 
     @property
     def is_resolved(self):

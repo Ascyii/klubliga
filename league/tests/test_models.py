@@ -116,7 +116,7 @@ class MatchTests(TestCase):
         self.assertEqual(self.match.sets(), [(6, 4), (3, 6), (10, 7)])
         self.assertEqual(self.match.score_for(self.match.entry1), "6:4 3:6 10:7")
         self.assertEqual(self.match.score_for(self.match.entry2), "4:6 6:3 7:10")
-        self.assertEqual(str(self.match), f"{self.match.entry1} gegen {self.match.entry2}")
+        self.assertEqual(str(self.match), f"{self.match.entry1} vs {self.match.entry2}")
 
     def test_counts_only_while_both_entries_are_in_the_group(self):
         place(self.season, [self.b], "B")

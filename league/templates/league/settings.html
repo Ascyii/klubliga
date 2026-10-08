@@ -6,7 +6,7 @@
 
 <section class="card">
   {% if season.is_started %}
-  <p><strong>{% blocktranslate with date=season.started_at|date:"j. F Y" %}The league started on {{ date }}.{% endblocktranslate %}</strong></p>
+  <p><strong>{% blocktranslate with date=season.started_at|date:"DATE_FORMAT" %}The league started on {{ date }}.{% endblocktranslate %}</strong></p>
   {% else %}
   <p><strong>{% translate "The league has not started yet." %}</strong> {% translate "Form the groups first, then start the league. Entries made afterwards wait for admission." %}</p>
   <form method="post">

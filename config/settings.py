@@ -35,6 +35,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "config.middleware.LanguageMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -75,9 +76,17 @@ LOGIN_REDIRECT_URL = "league:home"
 # Password-less login: keep devices logged in for a year.
 SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
 
-# The interface is German; the source strings are English (see locale/).
-LANGUAGE_CODE = "de"
+# UI languages, selectable in the page footer. Texts in code and templates are
+# English; every other language has its catalogue in
+# locale/<code>/LC_MESSAGES/django.po. To add a language, add it here and run
+# `just add-language <code>` (see README).
+LANGUAGES = [
+    ("de", "German"),
+    ("en", "English"),
+]
+LANGUAGE_CODE = "de"  # for visitors who have not chosen a language
 LOCALE_PATHS = [BASE_DIR / "locale"]
+LANGUAGE_COOKIE_AGE = SESSION_COOKIE_AGE
 TIME_ZONE = os.environ.get("DJANGO_TIME_ZONE", "Europe/Berlin")
 USE_I18N = True
 USE_TZ = True
@@ -123,4 +132,5 @@ else:
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    LANGUAGE_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

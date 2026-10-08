@@ -36,14 +36,17 @@
     {% endif %}
     {% block content %}{% endblock %}
   </main>
-  {% if user.is_authenticated %}
-  {# Devices stay logged in; logging out is only needed to let someone else use this device. #}
   <footer class="footer small muted">
-    {% blocktranslate with email=user.email %}Logged in as {{ email }}.{% endblocktranslate %}
-    <form method="post" action="{% url 'accounts:logout' %}" class="inline">
-      {% csrf_token %}<button type="submit" class="link" data-confirm="{% translate 'Log out on this device? To log in again you need a new code by email.' %}">{% translate "Log out" %}</button>
-    </form>
+    {% if user.is_authenticated %}
+    {# Devices stay logged in; logging out is only needed to let someone else use this device. #}
+    <div class="footer-login">
+      {% blocktranslate with email=user.email %}Logged in as {{ email }}.{% endblocktranslate %}
+      <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+        {% csrf_token %}<button type="submit" class="link" data-confirm="{% translate 'Log out on this device? To log in again you need a new code by email.' %}">{% translate "Log out" %}</button>
+      </form>
+    </div>
+    {% endif %}
+    {% include "includes/language_switch.html" %}
   </footer>
-  {% endif %}
 </body>
 </html>

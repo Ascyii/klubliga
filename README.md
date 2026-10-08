@@ -9,8 +9,10 @@ semi-finals and finals automatically.
 It is built to be used on a phone at the courts: few pages, big buttons, no
 app store, no password.
 
-The app speaks German. This README uses the English terms of the source code;
-in the app a tournament is a *Wettbewerb*, an entry a *Meldung*, and so on.
+The app speaks German and English; German is the default, and the language
+can be switched at the bottom of every page, including the login page. This
+README uses the English terms; in German a tournament is a *Wettbewerb*, an
+entry a *Meldung*, and so on.
 
 ---
 
@@ -218,19 +220,31 @@ Configuration is done through environment variables:
 | `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `EMAIL_USE_SSL` | SMTP server. Without `EMAIL_HOST`, mails go to the console. | – |
 | `DEFAULT_FROM_EMAIL` | Sender address of login mails | `klubliga@localhost` |
 
-### Translations
+### Languages
 
-The interface is German (`LANGUAGE_CODE = "de"`). Texts in the code and
-templates are written in English and marked for translation; the German texts
-live in `locale/de/LC_MESSAGES/django.po`. The compiled `django.mo` is
-committed, so running the app needs no extra tools. After changing texts
-(requires GNU gettext):
+Only the user interface is translated; code, data, logs, management commands
+and the Django admin's model names stay English.
+
+- `LANGUAGES` in `config/settings.py` lists the UI languages, `LANGUAGE_CODE`
+  is the default (`de`). The browser's language is deliberately ignored; the
+  user's choice is kept in a cookie for a year.
+- Texts in code and templates are English and marked for translation, so
+  English needs no catalogue. Every other language has one file to translate:
+  `locale/<code>/LC_MESSAGES/django.po`. The compiled `django.mo` next to it
+  is committed, so running the app needs no extra tools.
+- The login email and the texts used by `app.js` come from templates, so they
+  need nothing extra.
+
+Maintaining the translations needs GNU gettext (`apt install gettext`):
 
 ```bash
-uv run manage.py makemessages -l de --no-location --ignore=.venv --ignore=staticfiles
-# translate the new entries in locale/de/LC_MESSAGES/django.po, then
-uv run manage.py compilemessages --ignore=.venv
+just messages             # after changing texts: update all .po files, then compile
+just add-language fr      # new language: creates locale/fr/LC_MESSAGES/django.po
 ```
+
+To add a language: add it to `LANGUAGES`, run `just add-language <code>`,
+translate the `.po` file (a copy of the German one is a good start; check its
+`Plural-Forms` line), then run `just messages` and commit both files.
 
 ### Production
 

@@ -255,7 +255,8 @@ def close(request):
     if scope == "group":
         group = get_object_or_404(Group, pk=request.POST.get("group"), season=season)
         count = services.close_groups([group], request.user)
-        what = str(group)
+        what = _("%(tournament)s – Group %(name)s") % {
+            "tournament": group.get_tournament_display(), "name": group.name}
     elif scope == "tournament" and request.POST.get("tournament") in Tournament.values:
         tournament = request.POST["tournament"]
         count = services.close_tournament(season, tournament, request.user)

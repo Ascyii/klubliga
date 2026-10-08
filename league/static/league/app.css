@@ -91,6 +91,9 @@ h3 { font-size: 1.05rem; margin: 1.25rem 0 .5rem; }
 /* Footer: logging out is rarely needed, so it is kept out of the way. */
 .footer { max-width: 52rem; margin: 1rem auto 2rem; padding: 0 var(--gap); text-align: center; }
 .footer button.link { padding: 0; color: inherit; font-size: inherit; text-decoration: underline; }
+.footer-login { margin-bottom: .75rem; }
+.language-switch { display: flex; justify-content: center; gap: 1rem; }
+.language-switch button[aria-current] { color: var(--text); font-weight: 600; text-decoration: none; }
 
 /* Building blocks --------------------------------------------------------- */
 .card {

@@ -15,10 +15,14 @@ interface, the design decisions with their reasons, and the development plan.
 - **Tooling:** `uv` for Python and dependencies, the usual `manage.py`
   commands, SQLite as the database.
 - **Mobile first.** Single-column layout that widens gracefully on desktop.
-- **German interface.** All user-facing texts are English source strings
-  marked for Django's translation framework; `locale/de/` holds the German
-  catalogue and `LANGUAGE_CODE` is `de`. JavaScript gets its few texts from
-  the page (data attributes, `json_script`), so no JavaScript catalogue is needed.
+- **Bilingual interface.** German (default) and English, switchable in the
+  footer of every page via Django's `set_language` view. All user-facing
+  texts are English source strings marked for Django's translation framework;
+  `locale/<code>/` holds one catalogue per further language. A small
+  middleware (`config/middleware.py`) activates the language from the cookie
+  and otherwise uses `LANGUAGE_CODE`, ignoring Accept-Language. Internals
+  (`__str__`, logs, management commands) stay English. JavaScript gets its
+  few texts from the page (data attributes, `json_script`).
 - **Password-less.** Users are identified by email and log in with one-time
   codes sent by email.
 - **Seasons are automatic.** The season is the current calendar year in the
@@ -296,6 +300,7 @@ entries, otherwise 1.
 | `/login/code/` | enter the emailed code | public |
 | `/login/link/<token>/` | confirm button for the emailed link (POST logs in; protects against mail scanners that pre-open links) | public |
 | `/logout/` | POST | user |
+| `/i18n/setlang/` | POST: choose the UI language (Django's `set_language`) | public |
 | `/` | home: season status, my entries, new entry, my groups, my matches | user |
 | `/entries/<id>/withdraw/` | POST | player/admin |
 | `/matches/` | matches table: tournament tabs, season selector, standings, knockout, filtered match list | user |
@@ -336,7 +341,7 @@ entries, otherwise 1.
 | Knockout matches created only with both opponents known | A match always has two real entries; placeholders are a view concern. |
 | Score as text plus `winner` FK | Readable, easy to validate in pure Python; the winner FK makes queries simple. Set/game numbers are recomputed when needed (tiny data volume). |
 | Two apps (`accounts`, `league`) | Clear split between identity and league logic, idiomatic Django. |
-| No i18n in the first version | English UI keeps the code small; texts are concentrated in templates and can be wrapped for translation later. |
+| Django's gettext i18n, German default | Standard tooling: one `.po` file per language, English source texts, so adding a language touches only `LANGUAGES` and a new catalogue. The language comes from an explicit choice, not the browser, because the club's default is German. |
 
 ## 8. Testing strategy
 

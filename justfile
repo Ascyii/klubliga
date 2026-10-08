@@ -24,6 +24,15 @@ dev: install
 test:
     uv run manage.py test
 
+# Update all translation catalogues after texts changed, then compile them (needs GNU gettext)
+messages:
+    uv run manage.py makemessages --all --no-location --ignore=.venv --ignore=staticfiles
+    uv run manage.py compilemessages --ignore=.venv
+
+# Start the catalogue of a new UI language, e.g. `just add-language fr` (also add it to LANGUAGES in config/settings.py)
+add-language code:
+    uv run manage.py makemessages --locale={{code}} --no-location --ignore=.venv --ignore=staticfiles
+
 # Prepare a release: dependencies, database migrations, static files, deployment checks
 deploy:
     #!/usr/bin/env bash

@@ -4,7 +4,7 @@
 {% block content %}
 <section class="card">
   {% if season.is_started %}
-  <div class="spread"><strong>{% translate "The league is running." %}</strong> <span class="badge badge-ok">{% blocktranslate with date=season.started_at|date:"j. M" %}since {{ date }}{% endblocktranslate %}</span></div>
+  <div class="spread"><strong>{% translate "The league is running." %}</strong> <span class="badge badge-ok">{% blocktranslate with date=season.started_at|date:"MONTH_DAY_FORMAT" %}since {{ date }}{% endblocktranslate %}</span></div>
   <p class="muted small">{% translate "Arrange your matches with your opponents and enter the results below. Late entries are admitted by the organiser." %}</p>
   {% else %}
   <div class="spread"><strong>{% translate "Entries are open." %}</strong> <span class="badge badge-warn">{% translate "not started yet" %}</span></div>

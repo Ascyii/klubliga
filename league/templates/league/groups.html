@@ -60,7 +60,7 @@
 {% if withdrawn %}
 <section class="card">
   <h3>{% translate "Withdrawn" %}</h3>
-  <p class="small muted">{% for entry in withdrawn %}{{ entry }} ({{ entry.withdrawn_at|date:"j. M" }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  <p class="small muted">{% for entry in withdrawn %}{{ entry }} ({{ entry.withdrawn_at|date:"MONTH_DAY_FORMAT" }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>
 </section>
 {% endif %}
 {% endblock %}
