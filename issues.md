@@ -1,0 +1,5 @@
+- Create a minimal `./Dockerfile` for the project
+- Full i18n of the frontend to german
+- Email codes should not expire for a year
+- Remember the last opened tournament automatically
+- Make it not so present to logout. Ideally the user should never logout (the only reason is when the user wants to enter a game for another person from his device)

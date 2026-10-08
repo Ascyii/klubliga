@@ -208,7 +208,8 @@ Configuration is done through environment variables:
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | Comma-separated origins, e.g. `https://liga.example.org` | – |
 | `DJANGO_TIME_ZONE` | Time zone (decides when a new season begins) | `Europe/Berlin` |
 | `DJANGO_DB_PATH` | Location of the SQLite file | `./db.sqlite3` |
-| `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS` | SMTP server. Without `EMAIL_HOST`, mails go to the console. | – |
+| `LOCAL_ENV` | `1` to skip certificate checking for email | `0` |
+| `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `EMAIL_USE_SSL` | SMTP server. Without `EMAIL_HOST`, mails go to the console. | – |
 | `DEFAULT_FROM_EMAIL` | Sender address of login mails | `klubliga@localhost` |
 
 ### Production
