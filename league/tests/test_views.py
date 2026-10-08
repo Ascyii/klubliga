@@ -202,6 +202,13 @@ class MatchesPageTests(TestCase):
         self.assertContains(response, "No groups have been formed")
         self.assertFalse(response.context["can_manage"])
 
+    def test_remembers_last_tournament(self):
+        url = reverse("league:matches")
+        self.client.get(url, {"t": "XD"})
+        self.assertEqual(self.client.get(url).context["tournament"], "XD")
+        self.assertEqual(self.client.get(url, {"t": "WS"}).context["tournament"], "WS")
+        self.assertEqual(self.client.get(url).context["tournament"], "WS")
+
     def test_admin_closes_group_and_tournament(self):
         admin = make_user(is_staff=True)
         self.client.force_login(admin)

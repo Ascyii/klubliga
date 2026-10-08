@@ -16,6 +16,7 @@ from .scoring import ScoreError
 from .services import LeagueError
 
 STAGE_ORDER = {Match.Stage.GROUP: 0, Match.Stage.SEMI: 1, Match.Stage.FINAL: 2}
+SESSION_TOURNAMENT = "tournament"
 
 
 def admin_required(view):
@@ -33,6 +34,19 @@ def _redirect_next(request, default):
     if next_url and url_has_allowed_host_and_scheme(next_url, {request.get_host()}):
         return redirect(next_url)
     return redirect(default)
+
+
+def _pick_tournament(request):
+    """The tournament asked for in ``?t=``, else the one opened last on this device.
+
+    Returns None if there is neither.
+    """
+    tournament = request.GET.get("t")
+    if tournament in Tournament.values:
+        request.session[SESSION_TOURNAMENT] = tournament
+        return tournament
+    remembered = request.session.get(SESSION_TOURNAMENT)
+    return remembered if remembered in Tournament.values else None
 
 
 def _mark_mine(rows, user):
@@ -168,8 +182,8 @@ def matches(request):
     seasons = list(Season.objects.all())
     season = next((s for s in seasons if str(s.year) == request.GET.get("season")), current)
 
-    tournament = request.GET.get("t")
-    if tournament not in Tournament.values:
+    tournament = _pick_tournament(request)
+    if tournament is None:
         mine = (
             Entry.objects.active().filter(season=season).of_player(user)
             .order_by("tournament").values_list("tournament", flat=True).first()
@@ -251,9 +265,7 @@ def close(request):
 @admin_required
 def groups(request):
     season = Season.current()
-    tournament = request.GET.get("t")
-    if tournament not in Tournament.values:
-        tournament = Tournament.MEN_SINGLES
+    tournament = _pick_tournament(request) or Tournament.MEN_SINGLES
     entries = list(
         Entry.objects.active().filter(season=season, tournament=tournament)
         .select_related("group", "player1", "player2", "season")

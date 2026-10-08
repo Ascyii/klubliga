@@ -81,7 +81,8 @@ produced a result yet. After that, only the organiser can change it.
 
 ## The matches table
 
-The **Matches** page shows one tournament at a time (choose it at the top):
+The **Matches** page shows one tournament at a time (choose it at the top;
+the app remembers the one you opened last):
 
 1. The **group standings**.
 2. The **knockout stage** (semi-finals and final), as far as it is known.
