@@ -1,0 +1,8 @@
+.git/
+.claude/
+.venv/
+**/__pycache__/
+**/*.py[cod]
+staticfiles/
+db.sqlite3*
+.env

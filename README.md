@@ -235,4 +235,20 @@ files need no extra proxy configuration. To keep the app running, start
 
 Other recipes: `just dev` (development server), `just test`, `just` (list).
 
+### Docker
+
+`compose.yaml` runs the app behind a
+[caddy-docker-proxy](https://github.com/lucaslorentz/caddy-docker-proxy) on
+the external Docker network `caddy`. The `caddy` labels name the host
+(`liga.bitzz.de`); Caddy then routes it and obtains the certificate.
+
+```bash
+docker compose up -d --build   # build, migrate, start gunicorn
+docker compose logs -f web     # logs (and login codes while no SMTP is set)
+```
+
+Settings come from `.env`. The image collects the static files at build time.
+On start, the container applies migrations before gunicorn starts. The SQLite
+database lives in the volume `klubliga-data` (`/data/db.sqlite3`).
+
 More technical details are in [docs/SPECIFICATION.md](docs/SPECIFICATION.md).

@@ -1,0 +1,42 @@
+# Klubliga behind the host's caddy-docker-proxy (compose project "caddy",
+# external Docker network "caddy"). Caddy reads the labels below, routes
+# https://liga.bitzz.de to this container and obtains the certificate.
+#
+#     docker compose up -d --build
+#
+# Settings come from .env (see .env.example). Without EMAIL_HOST the login
+# codes are not mailed but written to the log: docker compose logs -f web
+
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DJANGO_DB_PATH: /data/db.sqlite3
+    volumes:
+      - klubliga-data:/data
+    networks:
+      - caddy
+    labels:
+      caddy: liga.bitzz.de
+      caddy.reverse_proxy: "{{upstreams 8000}}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen(u.Request('http://127.0.0.1:8000/login/', headers={'Host': 'liga.bitzz.de', 'X-Forwarded-Proto': 'https'}))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+networks:
+  caddy:
+    external: true
+
+volumes:
+  # The SQLite database – the only data worth backing up.
+  klubliga-data:
