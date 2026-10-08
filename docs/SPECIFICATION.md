@@ -115,7 +115,7 @@ least once (confirmed email) can be chosen as a doubles partner.
 | `user` | FK |
 | `code_hash` | SHA-256 of the 6-digit code |
 | `link_hash` | SHA-256 of the random link token (URL-safe, 32 bytes) |
-| `created_at`, `expires_at` | validity 30 minutes |
+| `created_at`, `expires_at` | validity one year |
 | `used_at` | set on successful use (single use) |
 | `attempts` | wrong code entries; the token dies after 5 |
 

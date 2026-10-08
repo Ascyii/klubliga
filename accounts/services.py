@@ -44,7 +44,7 @@ def issue_login_token(user, now=None):
 def send_login_email(request, user, code, link_secret):
     link = request.build_absolute_uri(reverse("accounts:link", args=[link_secret]))
     context = {"user": user, "code": code, "link": link,
-               "minutes": int(LoginToken.VALIDITY.total_seconds() // 60)}
+               "days": LoginToken.VALIDITY.days}
     subject = render_to_string("accounts/login_email_subject.txt", context, request).strip()
     body = render_to_string("accounts/login_email.txt", context, request)
     send_mail(subject, body, None, [user.email])

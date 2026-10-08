@@ -74,7 +74,7 @@ class User(AbstractUser):
 class LoginToken(models.Model):
     """A one-time login code plus link, sent by email."""
 
-    VALIDITY = timedelta(minutes=30)
+    VALIDITY = timedelta(days=365)  # a code can still be typed in long after it was mailed
     RESEND_INTERVAL = timedelta(seconds=60)
     MAX_ATTEMPTS = 5
     MAX_DAILY_ATTEMPTS = 20  # wrong codes per user and 24 hours, across all tokens

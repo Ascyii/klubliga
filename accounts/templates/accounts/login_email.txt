@@ -8,6 +8,6 @@ Or open this link to log in on the device you are reading this on:
 
 {{ link }}
 
-Code and link are valid for {{ minutes }} minutes and can be used once.
+Code and link are valid for {{ days }} days and can be used once.
 If you did not ask for this, simply ignore this email.
 {% endautoescape %}

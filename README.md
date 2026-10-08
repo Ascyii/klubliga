@@ -42,8 +42,8 @@ There are no passwords. Your device stays logged in for a year.
 ### Logging in on another device
 
 Enter your email address on the new device. You get a fresh login code by
-email; enter it on that device. Codes are valid for 30 minutes and can be used
-once.
+email; enter it on that device. Codes are valid for a year and can be used
+once; requesting a new code invalidates the old one.
 
 ---
 
