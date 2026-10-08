@@ -97,15 +97,21 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Email: SMTP when EMAIL_HOST is set, console output otherwise.
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "klubliga@localhost")
 if os.environ.get("EMAIL_HOST"):
+    if os.environ.get("LOCAL_ENV", "0") == "1":
+        email_backend = "accounts.email_backend.LocalSMTPEmailBackend"
+    else:
+        email_backend = "django.core.mail.backends.smtp.EmailBackend"
+
     MAILERS = {
         "default": {
-            "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+            "BACKEND": email_backend,
             "OPTIONS": {
                 "host": os.environ["EMAIL_HOST"],
-                "port": int(os.environ.get("EMAIL_PORT", "587")),
+                "port": int(os.environ.get("EMAIL_PORT", "465")),
                 "username": os.environ.get("EMAIL_HOST_USER", ""),
                 "password": os.environ.get("EMAIL_HOST_PASSWORD", ""),
-                "use_tls": os.environ.get("EMAIL_USE_TLS", "1") == "1",
+                "use_ssl": os.environ.get("EMAIL_USE_SSL", "1") == "1",
+                "use_tls": os.environ.get("EMAIL_USE_TLS", "0") == "1",
             },
         },
     }
