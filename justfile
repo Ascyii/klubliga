@@ -43,3 +43,11 @@ serve:
 
 # Deploy and serve in one go
 up: deploy serve
+
+# Build and start the Docker container, wait until it is healthy (see compose.yaml)
+docker-up:
+    docker compose up -d --build --wait
+
+# Follow the container's log
+docker-logs:
+    docker compose logs -f web
