@@ -15,6 +15,10 @@ interface, the design decisions with their reasons, and the development plan.
 - **Tooling:** `uv` for Python and dependencies, the usual `manage.py`
   commands, SQLite as the database.
 - **Mobile first.** Single-column layout that widens gracefully on desktop.
+- **German interface.** All user-facing texts are English source strings
+  marked for Django's translation framework; `locale/de/` holds the German
+  catalogue and `LANGUAGE_CODE` is `de`. JavaScript gets its few texts from
+  the page (data attributes, `json_script`), so no JavaScript catalogue is needed.
 - **Password-less.** Users are identified by email and log in with one-time
   codes sent by email.
 - **Seasons are automatic.** The season is the current calendar year in the

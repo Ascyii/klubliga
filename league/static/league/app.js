@@ -13,22 +13,24 @@ document.addEventListener("change", (event) => {
 });
 
 // New entry form: show the partner field only for doubles and preview the tournament.
+// The translated preview texts come from the page (#tournament-previews, keyed by tournament code).
 function setupEntryForm(form) {
   const partner = form.querySelector("select[name=partner]");
   const field = partner && partner.closest(".field");
   const preview = form.querySelector("[data-entry-preview]");
   const mySex = form.dataset.mySex;
+  const texts = JSON.parse(document.getElementById("tournament-previews")?.textContent || "{}");
   const update = () => {
     const kind = form.querySelector("input[name=kind]:checked")?.value || "singles";
     if (field) field.hidden = kind !== "doubles";
-    let name = mySex === "M" ? "Men's Singles" : "Women's Singles";
+    let code = mySex === "M" ? "MS" : "WS";
     if (kind === "doubles") {
       const sex = partner.selectedOptions[0]?.dataset.sex;
-      if (!sex) name = "";
-      else if (sex !== mySex) name = "Mixed Doubles";
-      else name = mySex === "M" ? "Men's Doubles" : "Women's Doubles";
+      if (!sex) code = "";
+      else if (sex !== mySex) code = "XD";
+      else code = mySex === "M" ? "MD" : "WD";
     }
-    preview.textContent = name ? `Tournament: ${name}` : "";
+    preview.textContent = texts[code] || "";
   };
   form.addEventListener("change", update);
   update();
@@ -36,6 +38,7 @@ function setupEntryForm(form) {
 document.querySelectorAll("form[data-entry-form]").forEach(setupEntryForm);
 
 // <score-input>: shows only the sets that are still needed and announces the winner.
+// data-winner-text is the translated announcement with {name} and {sets} placeholders.
 class ScoreInput extends HTMLElement {
   connectedCallback() {
     this.bestOf = Number(this.dataset.bestOf) || 3;
@@ -43,6 +46,7 @@ class ScoreInput extends HTMLElement {
     this.rows = [...this.querySelectorAll(".set-row")];
     this.status = this.querySelector(".score-status");
     this.names = [this.dataset.name1, this.dataset.name2];
+    this.winnerText = this.dataset.winnerText || "Winner: {name} ({sets} sets)";
     this.addEventListener("input", () => this.update());
     const form = this.closest("form");
     if (form) form.addEventListener("change", () => this.update());
@@ -69,8 +73,9 @@ class ScoreInput extends HTMLElement {
       won[a > b ? 0 : 1] += 1;
     });
     const winner = won[0] >= this.toWin ? 0 : won[1] >= this.toWin ? 1 : -1;
-    this.status.textContent = winner < 0 ? "" :
-      `Winner: ${this.names[winner]} (${won[winner]}:${won[1 - winner]} sets)`;
+    this.status.textContent = winner < 0 ? "" : this.winnerText
+      .replace("{name}", this.names[winner])
+      .replace("{sets}", `${won[winner]}:${won[1 - winner]}`);
   }
 }
 customElements.define("score-input", ScoreInput);

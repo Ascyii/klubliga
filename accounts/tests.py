@@ -110,7 +110,7 @@ class TokenServiceTests(TestCase):
         code = re.search(r"\b(\d{6})\b", message.body).group(1)
         self.assertIn(code, message.subject)
         self.assertIn("http://testserver/login/link/", message.body)
-        self.assertIn("Hello Anna", message.body)
+        self.assertIn("Hallo Anna", message.body)
 
 
 class LoginFlowTests(TestCase):
@@ -137,7 +137,7 @@ class LoginFlowTests(TestCase):
         response = self.client.post(reverse("accounts:code"), {"code": "000000"})
         if "wrong" not in response.content.decode():  # the random code happened to be 000000
             return
-        self.assertContains(response, "This code is wrong or has expired.")
+        self.assertContains(response, "Dieser Code ist falsch oder abgelaufen.")
         response = self.client.post(reverse("accounts:code"), {"code": self.code_from_mail()})
         self.assertRedirects(response, reverse("league:home"))
         user.refresh_from_db()
@@ -154,7 +154,7 @@ class LoginFlowTests(TestCase):
         make_user(confirmed=True)
         response = self.client.post(reverse("accounts:register"), {
             "email": "anna@example.com", "first_name": "A", "last_name": "B", "sex": "F"})
-        self.assertContains(response, "already registered")
+        self.assertContains(response, "bereits registriert")
 
     def test_login_with_link_and_next(self):
         user = make_user(confirmed=True)
@@ -162,13 +162,13 @@ class LoginFlowTests(TestCase):
         self.client.post(reverse("accounts:login"), {"email": "ANNA@example.com"})
         link = self.link_from_mail()
         response = self.client.get(link)
-        self.assertContains(response, "Continue as")
+        self.assertContains(response, "Weiter als")
         self.assertNotIn("_auth_user_id", self.client.session)  # GET does not log in
         response = self.client.post(link)
         self.assertRedirects(response, "/matches/", fetch_redirect_response=False)
         self.assertEqual(int(self.client.session["_auth_user_id"]), user.pk)
         response = self.client.get(link, follow=True)
-        self.assertContains(response, "invalid or has expired")
+        self.assertContains(response, "ungültig oder abgelaufen")
 
     def test_unsafe_next_is_ignored(self):
         make_user(confirmed=True)
@@ -181,7 +181,7 @@ class LoginFlowTests(TestCase):
         make_user(confirmed=True)
         self.client.post(reverse("accounts:login"), {"email": "anna@example.com"})
         response = self.client.post(reverse("accounts:resend"), follow=True)
-        self.assertContains(response, "less than a minute ago")
+        self.assertContains(response, "weniger als einer Minute")
         self.assertEqual(len(mail.outbox), 1)
 
     def test_code_page_without_email_redirects(self):
@@ -191,7 +191,7 @@ class LoginFlowTests(TestCase):
     def test_inactive_user_cannot_log_in(self):
         make_user(is_active=False)
         response = self.client.post(reverse("accounts:login"), {"email": "anna@example.com"})
-        self.assertContains(response, "disabled")
+        self.assertContains(response, "deaktiviert")
         self.assertEqual(len(mail.outbox), 0)
 
     def test_logout(self):

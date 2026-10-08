@@ -42,10 +42,10 @@ class HomeTests(TestCase):
 
     def test_create_singles_entry(self):
         response = self.client.post(reverse("league:home"), {"kind": "singles"}, follow=True)
-        self.assertContains(response, "You are entered in Men&#x27;s Singles")
+        self.assertContains(response, "Du bist für Herreneinzel gemeldet")
         entry = Entry.objects.get()
         self.assertEqual((entry.player1, entry.player2, entry.tournament), (self.user, None, "MS"))
-        self.assertContains(response, "Registered")
+        self.assertContains(response, "Gemeldet")
 
     def test_create_doubles_entry(self):
         partner = make_user("Eva", "Partner", "F")
@@ -54,10 +54,10 @@ class HomeTests(TestCase):
 
     def test_doubles_requires_partner_and_duplicate_is_rejected(self):
         response = self.client.post(reverse("league:home"), {"kind": "doubles"})
-        self.assertContains(response, "Please choose your partner.")
+        self.assertContains(response, "Bitte wähle deine Partnerin oder deinen Partner.")
         services.create_entry(self.season, self.user)
         response = self.client.post(reverse("league:home"), {"kind": "singles"})
-        self.assertContains(response, "already has an entry")
+        self.assertContains(response, "bereits für")
         self.assertEqual(Entry.objects.count(), 1)
 
     def test_partner_choices_only_confirmed_members(self):
@@ -75,18 +75,18 @@ class HomeTests(TestCase):
         others = singles(self.season, 2)
         place(self.season, [mine, *others], "A")
         response = self.client.get(reverse("league:home"))
-        self.assertContains(response, "My groups")
-        self.assertContains(response, "2 open")
+        self.assertContains(response, "Meine Gruppen")
+        self.assertContains(response, "2 offen")
         self.assertContains(response, 'class="me"')
 
     def test_withdraw(self):
         entry = services.create_entry(self.season, self.user)
         response = self.client.post(reverse("league:withdraw", args=[entry.pk]), follow=True)
-        self.assertContains(response, "has been withdrawn")
+        self.assertContains(response, "wurde zurückgezogen")
         entry.refresh_from_db()
         self.assertFalse(entry.is_active)
         response = self.client.post(reverse("league:withdraw", args=[entry.pk]), follow=True)
-        self.assertContains(response, "already been withdrawn")
+        self.assertContains(response, "bereits zurückgezogen")
 
     def test_withdraw_foreign_entry_forbidden(self):
         other = singles(self.season, 1)[0]
@@ -107,21 +107,21 @@ class MatchDetailTests(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, "<score-input")
         self.assertContains(response, self.b.player1.email)
-        self.assertContains(response, "Match tie-break")
+        self.assertContains(response, "Match-Tiebreak")
         response = self.client.post(self.url, {"s1_1": 6, "s1_2": 3, "s2_1": 3, "s2_2": 6, "s3_1": 10, "s3_2": 4},
                                     follow=True)
-        self.assertContains(response, "The result has been saved.")
+        self.assertContains(response, "Das Ergebnis wurde gespeichert.")
         self.match.refresh_from_db()
         self.assertEqual((self.match.score, self.match.winner), ("6:3 3:6 10:4", self.match.entry1))
 
     def test_invalid_result_shows_error(self):
         self.client.force_login(self.a.player1)
         response = self.client.post(self.url, {"s1_1": 6, "s1_2": 3})
-        self.assertContains(response, "The match is not finished")
+        self.assertContains(response, "Das Match ist nicht beendet")
         response = self.client.post(self.url, {"s1_1": 6, "s2_1": 6, "s2_2": 2})
-        self.assertContains(response, "Set 1: please enter the score of both sides.")
+        self.assertContains(response, "Satz 1: Bitte gib das Ergebnis beider Seiten ein.")
         response = self.client.post(self.url, {"s1_1": 6, "s1_2": 3, "s3_1": 6, "s3_2": 2})
-        self.assertContains(response, "Please fill in the sets in order.")
+        self.assertContains(response, "Bitte trage die Sätze der Reihe nach ein.")
         self.match.refresh_from_db()
         self.assertEqual(self.match.status, Match.Status.PENDING)
 
@@ -135,11 +135,11 @@ class MatchDetailTests(TestCase):
         self.season.started_at = None
         self.season.save()
         self.client.force_login(self.a.player1)
-        self.assertContains(self.client.get(self.url), "once the league has started")
+        self.assertContains(self.client.get(self.url), "sobald die Liga begonnen hat")
 
     def test_admin_records_walkover_and_cancel(self):
         self.client.force_login(make_user(is_staff=True))
-        self.assertContains(self.client.get(self.url), "Not played")
+        self.assertContains(self.client.get(self.url), "Nicht gespielt")
         self.client.post(self.url, {"outcome": "w2"})
         self.match.refresh_from_db()
         self.assertEqual((self.match.status, self.match.winner), (Match.Status.WALKOVER, self.match.entry2))
@@ -163,7 +163,7 @@ class MatchDetailTests(TestCase):
         self.match.refresh_from_db()
         form = ResultForm(match=self.match)
         self.assertEqual((form.initial["s1_1"], form.initial["s2_2"]), (7, 4))
-        self.assertEqual([r["label"] for r in form.set_rows()], ["Set 1", "Set 2", "Match tie-break"])
+        self.assertEqual([r["label"] for r in form.set_rows()], ["Satz 1", "Satz 2", "Match-Tiebreak"])
 
 
 class MatchesPageTests(TestCase):
@@ -179,9 +179,9 @@ class MatchesPageTests(TestCase):
 
     def test_standings_bracket_and_list(self):
         response = self.client.get(reverse("league:matches"), {"t": "MS"})
-        self.assertContains(response, "Group A")
-        self.assertContains(response, "finished")
-        self.assertContains(response, "Winner Group A – Runner-up Group B")
+        self.assertContains(response, "Gruppe A")
+        self.assertContains(response, "beendet")
+        self.assertContains(response, "Sieger Gruppe A – Zweiter Gruppe B")
         self.assertEqual(len(response.context["match_list"]), 6)
 
     def test_filters(self):
@@ -199,7 +199,7 @@ class MatchesPageTests(TestCase):
         old = Season.objects.create(year=self.season.year - 1)
         response = self.client.get(reverse("league:matches"), {"season": old.year, "t": "WD"})
         self.assertEqual(response.context["view_season"], old)
-        self.assertContains(response, "No groups have been formed")
+        self.assertContains(response, "wurden keine Gruppen gebildet")
         self.assertFalse(response.context["can_manage"])
 
     def test_remembers_last_tournament(self):
@@ -213,13 +213,13 @@ class MatchesPageTests(TestCase):
         admin = make_user(is_staff=True)
         self.client.force_login(admin)
         response = self.client.get(reverse("league:matches"), {"t": "MS"})
-        self.assertContains(response, "Close group phase of tournament")
+        self.assertContains(response, "Gruppenphase des Wettbewerbs abschließen")
         group_b = self.b[0].group
         response = self.client.post(reverse("league:close"), {"scope": "group", "group": group_b.pk}, follow=True)
-        self.assertContains(response, "3 open match(es) marked as not played")
+        self.assertContains(response, "3 offene Matches als nicht gespielt markiert")
         self.assertEqual(Match.objects.filter(stage="semi").count(), 2)
         response = self.client.post(reverse("league:close"), {"scope": "tournament", "tournament": "MS"}, follow=True)
-        self.assertContains(response, "0 open match(es)")
+        self.assertContains(response, "0 offene Matches")
         self.assertEqual(self.client.post(reverse("league:close"), {"scope": "bogus"}).status_code, 403)
 
 
@@ -232,11 +232,11 @@ class AdminPageTests(TestCase):
     def test_groups_page_manual_assignment(self):
         url = reverse("league:groups")
         response = self.client.get(url, {"t": "MS"})
-        self.assertContains(response, "Men&#x27;s Singles (4)")
-        self.assertContains(response, "Suggested: 1 group")
+        self.assertContains(response, "Herreneinzel (4)")
+        self.assertContains(response, "Vorschlag: 1 Gruppe.")
         data = {"action": "save", **{f"entry-{e.pk}": "A" for e in self.entries[:3]}, f"entry-{self.entries[3].pk}": "B"}
         response = self.client.post(f"{url}?t=MS", data, follow=True)
-        self.assertContains(response, "Groups saved (4 change(s)).")
+        self.assertContains(response, "Gruppen gespeichert (4 Änderungen).")
         self.assertEqual(Match.objects.count(), 3)
 
     def test_groups_page_random_split_and_remove(self):
@@ -245,32 +245,32 @@ class AdminPageTests(TestCase):
         self.assertEqual(Entry.objects.filter(group__isnull=False).count(), 4)
         win(Match.objects.first(), Match.objects.first().entry1)
         response = self.client.post(f"{url}?t=MS", {"action": "random1"}, follow=True)
-        self.assertContains(response, "random split is no longer possible")
+        self.assertContains(response, "zufällige Einteilung ist nicht mehr möglich")
         entry = self.entries[0]
         response = self.client.post(f"{reverse('league:withdraw', args=[entry.pk])}?next={url}%3Ft%3DMS", follow=True)
         self.assertEqual(response.redirect_chain[-1][0], f"{url}?t=MS")
         entry.refresh_from_db()
         self.assertFalse(entry.is_active)
-        self.assertContains(response, "Withdrawn")
+        self.assertContains(response, "Zurückgezogen")
 
     def test_settings_save_start_and_close_all(self):
         url = reverse("league:settings")
-        self.assertContains(self.client.get(url), "Start league")
+        self.assertContains(self.client.get(url), "Liga starten")
         data = {"action": "save", "name": "Sommerliga", "best_of": 3, "games_per_set": 4,
                 "deciding_match_tiebreak": "on", "match_tiebreak_points": 7, "two_groups_from": 6}
         self.client.post(url, data)
         self.season.refresh_from_db()
         self.assertEqual((self.season.name, self.season.games_per_set), ("Sommerliga", 4))
         response = self.client.post(url, {**data, "games_per_set": 12})
-        self.assertContains(response, "less than or equal to 9")
+        self.assertContains(response, "kleiner oder gleich 9")
         response = self.client.post(url, {"action": "start"}, follow=True)
-        self.assertContains(response, "The league has started")
+        self.assertContains(response, "Die Liga hat begonnen")
         response = self.client.post(url, {"action": "start"}, follow=True)
-        self.assertContains(response, "already started")
+        self.assertContains(response, "bereits begonnen")
         place(self.season, self.entries[:2], "A")
         response = self.client.post(reverse("league:close"), {"scope": "all", "next": url}, follow=True)
-        self.assertContains(response, "1 open match(es)")
-        self.assertContains(response, "scheduled")
+        self.assertContains(response, "1 offenes Match")
+        self.assertContains(response, "angesetzt")
 
     def test_season_form_limits(self):
         form = SeasonForm({"name": "X", "best_of": 2, "games_per_set": 6, "match_tiebreak_points": 10,

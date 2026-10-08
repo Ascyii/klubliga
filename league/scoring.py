@@ -7,6 +7,8 @@ For a match tie-break the tuple holds points instead of games.
 import re
 from dataclasses import dataclass
 
+from django.utils.translation import gettext as _
+
 
 class ScoreError(ValueError):
     """The score is not valid under the given rules."""
@@ -47,7 +49,7 @@ def parse_score(text):
             continue
         match = _SET_RE.match(token)
         if not match:
-            raise ScoreError(f"Cannot read the set score “{token}”.")
+            raise ScoreError(_("Cannot read the set score “%(set)s”.") % {"set": token})
         sets.append((int(match.group(1)), int(match.group(2))))
     return sets
 
@@ -63,21 +65,22 @@ def flip(sets):
 def validate_set(a, b, rules, tiebreak=False):
     """Validate one set and return the winning side (1 or 2)."""
     if a == b:
-        raise ScoreError("A set cannot end in a draw.")
+        raise ScoreError(_("A set cannot end in a draw."))
     high, low = max(a, b), min(a, b)
     if tiebreak:
         points = rules.match_tiebreak_points
         if high < points:
-            raise ScoreError(f"A match tie-break is won with at least {points} points.")
+            raise ScoreError(_("A match tie-break is won with at least %(points)s points.") % {"points": points})
         if high - low < 2:
-            raise ScoreError("A match tie-break must be won by two points.")
+            raise ScoreError(_("A match tie-break must be won by two points."))
         if high > points and high - low != 2:
-            raise ScoreError(f"Beyond {points} points a match tie-break ends with a two-point lead.")
+            raise ScoreError(
+                _("Beyond %(points)s points a match tie-break ends with a two-point lead.") % {"points": points})
     else:
         games = rules.games_per_set
         valid = (high == games and low <= games - 2) or (high == games + 1 and low in (games - 1, games))
         if not valid:
-            raise ScoreError(f"{a}:{b} is not a valid set score.")
+            raise ScoreError(_("%(a)s:%(b)s is not a valid set score.") % {"a": a, "b": b})
     return 1 if a > b else 2
 
 
@@ -101,18 +104,19 @@ def summarize(sets, rules):
 def evaluate(sets, rules):
     """Validate a complete match score and return its :class:`Outcome`."""
     if not sets:
-        raise ScoreError("Please enter the score.")
+        raise ScoreError(_("Please enter the score."))
     won = [0, 0]
     for index, (a, b) in enumerate(sets):
         if max(won) == rules.sets_to_win:
-            raise ScoreError("Too many sets: the match was already decided.")
+            raise ScoreError(_("Too many sets: the match was already decided."))
         try:
             side = validate_set(a, b, rules, tiebreak=rules.is_tiebreak_set(index))
         except ScoreError as error:
-            raise ScoreError(f"Set {index + 1}: {error}") from None
+            raise ScoreError(_("Set %(number)s: %(error)s") % {"number": index + 1, "error": error}) from None
         won[side - 1] += 1
     if max(won) < rules.sets_to_win:
-        raise ScoreError(f"The match is not finished: {rules.sets_to_win} sets are needed to win.")
+        raise ScoreError(_("The match is not finished: %(sets)s sets are needed to win.")
+                         % {"sets": rules.sets_to_win})
     sets_won, games_won = summarize(sets, rules)
     return Outcome(winner=1 if won[0] > won[1] else 2, sets=sets_won, games=games_won)
 

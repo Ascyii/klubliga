@@ -1,17 +1,17 @@
-<a class="match{% if not m.counts %} void{% endif %}" href="{% url 'league:match' m.pk %}">
+{% load i18n %}<a class="match{% if not m.counts %} void{% endif %}" href="{% url 'league:match' m.pk %}">
   <span class="sides">
     <span class="side{% if m.winner_id and m.winner_id == m.entry1_id %} won{% endif %}">{{ m.entry1 }}</span>
     <span class="side{% if m.winner_id and m.winner_id == m.entry2_id %} won{% endif %}">{{ m.entry2 }}</span>
   </span>
   <span class="score">
     {% if m.status == "played" %}{{ m.score }}
-    {% elif m.status == "walkover" %}w/o
+    {% elif m.status == "walkover" %}{% translate "w/o" context "walkover, short" %}
     {% elif m.status == "cancelled" %}–
-    {% else %}<span class="badge badge-warn">open</span>{% endif %}
+    {% else %}<span class="badge badge-warn">{% translate "open" %}</span>{% endif %}
   </span>
   <span class="meta">
     {% if show_tournament %}{{ m.get_tournament_display }} · {% endif %}{{ m.stage_label }}
-    {% if m.status == "walkover" %} · walkover{% elif m.status == "cancelled" %} · not played{% endif %}
-    {% if not m.counts %} · does not count{% endif %}
+    {% if m.status == "walkover" %} · {% translate "walkover" %}{% elif m.status == "cancelled" %} · {% translate "not played" %}{% endif %}
+    {% if not m.counts %} · {% translate "does not count" %}{% endif %}
   </span>
 </a>

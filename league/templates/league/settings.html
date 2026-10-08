@@ -1,24 +1,25 @@
 {% extends "base.html" %}
-{% block title %}Settings{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Settings" %}{% endblock %}
 {% block content %}
-<h1>Settings {{ season.year }}</h1>
+<h1>{% blocktranslate with year=season.year %}Settings {{ year }}{% endblocktranslate %}</h1>
 
 <section class="card">
   {% if season.is_started %}
-  <p><strong>The league started on {{ season.started_at|date:"j F Y" }}.</strong></p>
+  <p><strong>{% blocktranslate with date=season.started_at|date:"j. F Y" %}The league started on {{ date }}.{% endblocktranslate %}</strong></p>
   {% else %}
-  <p><strong>The league has not started yet.</strong> Form the groups first, then start the league. Entries made afterwards wait for admission.</p>
+  <p><strong>{% translate "The league has not started yet." %}</strong> {% translate "Form the groups first, then start the league. Entries made afterwards wait for admission." %}</p>
   <form method="post">
     {% csrf_token %}
-    <button type="submit" name="action" value="start" data-confirm="Start the league now? Players can then enter results.">Start league</button>
+    <button type="submit" name="action" value="start" data-confirm="{% translate 'Start the league now? Players can then enter results.' %}">{% translate "Start league" %}</button>
   </form>
   {% endif %}
 </section>
 
-<h2>Overview</h2>
+<h2>{% translate "Overview" %}</h2>
 <section class="card table-wrap">
   <table>
-    <thead><tr><th>Tournament</th><th class="num">Entries</th><th class="num">Not placed</th><th class="num">Groups</th><th class="num">Open</th><th class="num">Done</th><th>Final</th></tr></thead>
+    <thead><tr><th>{% translate "Tournament" %}</th><th class="num">{% translate "Entries" %}</th><th class="num">{% translate "Not placed" %}</th><th class="num">{% translate "Groups" %}</th><th class="num">{% translate "Open" %}</th><th class="num">{% translate "Done" %}</th><th>{% translate "Final" %}</th></tr></thead>
     <tbody>
       {% for t in overview %}
       <tr>
@@ -28,7 +29,7 @@
         <td class="num">{{ t.groups }}</td>
         <td class="num">{{ t.open }}</td>
         <td class="num">{{ t.done }}</td>
-        <td>{% if t.final.winner %}🏆 {{ t.final.winner }}{% elif t.final %}scheduled{% else %}–{% endif %}</td>
+        <td>{% if t.final.winner %}🏆 {{ t.final.winner }}{% elif t.final %}{% translate "scheduled" %}{% else %}–{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -37,18 +38,18 @@
   <form method="post" action="{% url 'league:close' %}" style="margin-top:1rem">
     {% csrf_token %}
     <input type="hidden" name="scope" value="all"><input type="hidden" name="next" value="{% url 'league:settings' %}">
-    <button type="submit" class="secondary small" data-confirm="Close the group phase of ALL tournaments? All open group matches will be marked as not played.">Close group phase of all tournaments</button>
+    <button type="submit" class="secondary small" data-confirm="{% translate 'Close the group phase of ALL tournaments? All open group matches will be marked as not played.' %}">{% translate "Close group phase of all tournaments" %}</button>
   </form>
   {% endif %}
 </section>
 
-<h2>Rules</h2>
+<h2>{% translate "Rules" %}</h2>
 <section class="card">
   <form method="post">
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
-    <button type="submit" name="action" value="save">Save settings</button>
+    <button type="submit" name="action" value="save">{% translate "Save settings" %}</button>
   </form>
-  <p class="small muted">Changes apply to results entered from now on. Settings are copied to the next season automatically.</p>
+  <p class="small muted">{% translate "Changes apply to results entered from now on. Settings are copied to the next season automatically." %}</p>
 </section>
 {% endblock %}

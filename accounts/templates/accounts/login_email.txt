@@ -1,13 +1,13 @@
-{% autoescape off %}Hello {{ user.first_name }},
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=user.first_name %}Hello {{ name }},
 
-your login code for {{ league_name }} is:
+your login code for {{ league_name }} is:{% endblocktranslate %}
 
     {{ code }}
 
-Or open this link to log in on the device you are reading this on:
+{% translate "Or open this link to log in on the device you are reading this on:" %}
 
 {{ link }}
 
-Code and link are valid for {{ days }} days and can be used once.
-If you did not ask for this, simply ignore this email.
+{% blocktranslate %}Code and link are valid for {{ days }} days and can be used once.
+If you did not ask for this, simply ignore this email.{% endblocktranslate %}
 {% endautoescape %}

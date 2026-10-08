@@ -74,10 +74,10 @@ class EntryTests(TestCase):
         season.save()
         entry.refresh_from_db()
         self.assertEqual(entry.status, Entry.Status.WAITING)
-        self.assertEqual(entry.status_label, "Waiting for admission")
+        self.assertEqual(entry.status_label, "Wartet auf Zulassung")
         place(season, [entry], "B")
         self.assertEqual(entry.status, Entry.Status.PLACED)
-        self.assertEqual(entry.status_label, "Group B")
+        self.assertEqual(entry.status_label, "Gruppe B")
         entry.withdrawn_at = timezone.now()
         self.assertEqual(entry.status, Entry.Status.WITHDRAWN)
         self.assertFalse(entry.is_active)
@@ -103,7 +103,7 @@ class MatchTests(TestCase):
         self.assertFalse(m.is_decided)
         self.assertFalse(m.is_knockout)
         self.assertTrue(m.counts)
-        self.assertEqual(m.stage_label, "Group A")
+        self.assertEqual(m.stage_label, "Gruppe A")
         win(m, self.a)
         m.refresh_from_db()
         self.assertTrue(m.is_resolved and m.is_decided)
@@ -116,7 +116,7 @@ class MatchTests(TestCase):
         self.assertEqual(self.match.sets(), [(6, 4), (3, 6), (10, 7)])
         self.assertEqual(self.match.score_for(self.match.entry1), "6:4 3:6 10:7")
         self.assertEqual(self.match.score_for(self.match.entry2), "4:6 6:3 7:10")
-        self.assertEqual(str(self.match), f"{self.match.entry1} vs {self.match.entry2}")
+        self.assertEqual(str(self.match), f"{self.match.entry1} gegen {self.match.entry2}")
 
     def test_counts_only_while_both_entries_are_in_the_group(self):
         place(self.season, [self.b], "B")
@@ -128,6 +128,6 @@ class MatchTests(TestCase):
         self.assertFalse(match.counts)
 
     def test_knockout_labels(self):
-        self.assertEqual(Match(stage=Match.Stage.SEMI, slot=2).stage_label, "Semi-final 2")
-        self.assertEqual(Match(stage=Match.Stage.FINAL, slot=1).stage_label, "Final")
+        self.assertEqual(Match(stage=Match.Stage.SEMI, slot=2).stage_label, "Halbfinale 2")
+        self.assertEqual(Match(stage=Match.Stage.FINAL, slot=1).stage_label, "Finale")
         self.assertTrue(Match(stage=Match.Stage.FINAL).counts)

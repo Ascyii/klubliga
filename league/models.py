@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext, gettext_lazy as _
 
 from .scoring import ScoringRules
 
@@ -8,11 +9,11 @@ from .scoring import ScoringRules
 class Tournament(models.TextChoices):
     """The five tournaments of every season, defined by format and sex."""
 
-    MEN_SINGLES = "MS", "Men's Singles"
-    WOMEN_SINGLES = "WS", "Women's Singles"
-    MEN_DOUBLES = "MD", "Men's Doubles"
-    WOMEN_DOUBLES = "WD", "Women's Doubles"
-    MIXED_DOUBLES = "XD", "Mixed Doubles"
+    MEN_SINGLES = "MS", _("Men's Singles")
+    WOMEN_SINGLES = "WS", _("Women's Singles")
+    MEN_DOUBLES = "MD", _("Men's Doubles")
+    WOMEN_DOUBLES = "WD", _("Women's Doubles")
+    MIXED_DOUBLES = "XD", _("Mixed Doubles")
 
     @classmethod
     def for_players(cls, player1, player2=None):
@@ -34,23 +35,23 @@ class Tournament(models.TextChoices):
 class Season(models.Model):
     """One year of the league, including the rules it is played with."""
 
-    BEST_OF_CHOICES = [(1, "1 set"), (3, "Best of 3 sets"), (5, "Best of 5 sets")]
+    BEST_OF_CHOICES = [(1, _("1 set")), (3, _("Best of 3 sets")), (5, _("Best of 5 sets"))]
     SETTING_FIELDS = [
         "name", "best_of", "games_per_set", "deciding_match_tiebreak",
         "match_tiebreak_points", "two_groups_from",
     ]
 
     year = models.PositiveIntegerField(unique=True)
-    name = models.CharField("league name", max_length=60, default="Klubliga")
-    best_of = models.PositiveSmallIntegerField("sets per match", choices=BEST_OF_CHOICES, default=3)
+    name = models.CharField(_("league name"), max_length=60, default="Klubliga")
+    best_of = models.PositiveSmallIntegerField(_("sets per match"), choices=BEST_OF_CHOICES, default=3)
     games_per_set = models.PositiveSmallIntegerField(default=6)
     deciding_match_tiebreak = models.BooleanField(
-        "deciding set is a match tie-break", default=True
+        _("deciding set is a match tie-break"), default=True
     )
-    match_tiebreak_points = models.PositiveSmallIntegerField("points in the match tie-break", default=10)
+    match_tiebreak_points = models.PositiveSmallIntegerField(_("points in the match tie-break"), default=10)
     two_groups_from = models.PositiveSmallIntegerField(
-        "suggest two groups from", default=8,
-        help_text="Number of entries in a tournament from which two groups are suggested.",
+        _("suggest two groups from"), default=8,
+        help_text=_("Number of entries in a tournament from which two groups are suggested."),
     )
     started_at = models.DateTimeField(null=True, blank=True)
 
@@ -96,8 +97,8 @@ class Season(models.Model):
 
 class Group(models.Model):
     class Name(models.TextChoices):
-        A = "A", "Group A"
-        B = "B", "Group B"
+        A = "A", _("Group A")
+        B = "B", _("Group B")
 
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="groups")
     tournament = models.CharField(max_length=2, choices=Tournament.choices)
@@ -110,7 +111,8 @@ class Group(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.get_tournament_display()} – Group {self.name}"
+        return gettext("%(tournament)s – Group %(name)s") % {
+            "tournament": self.get_tournament_display(), "name": self.name}
 
     def active_entries(self):
         return self.entries.filter(withdrawn_at__isnull=True).select_related("player1", "player2")
@@ -128,10 +130,10 @@ class Entry(models.Model):
     """One or two players taking part in one tournament of a season."""
 
     class Status(models.TextChoices):
-        REGISTERED = "registered", "Registered"
-        PLACED = "placed", "Placed in a group"
-        WAITING = "waiting", "Waiting for admission"
-        WITHDRAWN = "withdrawn", "Withdrawn"
+        REGISTERED = "registered", _("Registered")
+        PLACED = "placed", _("Placed in a group")
+        WAITING = "waiting", _("Waiting for admission")
+        WITHDRAWN = "withdrawn", _("Withdrawn")
 
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="entries")
     tournament = models.CharField(max_length=2, choices=Tournament.choices)
@@ -188,7 +190,7 @@ class Entry(models.Model):
     @property
     def status_label(self):
         if self.status == self.Status.PLACED:
-            return f"Group {self.group.name}"
+            return gettext("Group %(name)s") % {"name": self.group.name}
         return self.Status(self.status).label
 
 
@@ -209,15 +211,15 @@ class MatchQuerySet(models.QuerySet):
 
 class Match(models.Model):
     class Stage(models.TextChoices):
-        GROUP = "group", "Group"
-        SEMI = "semi", "Semi-final"
-        FINAL = "final", "Final"
+        GROUP = "group", _("Group")
+        SEMI = "semi", _("Semi-final")
+        FINAL = "final", _("Final")
 
     class Status(models.TextChoices):
-        PENDING = "pending", "Open"
-        PLAYED = "played", "Played"
-        WALKOVER = "walkover", "Walkover"
-        CANCELLED = "cancelled", "Not played"
+        PENDING = "pending", _("Open")
+        PLAYED = "played", _("Played")
+        WALKOVER = "walkover", _("Walkover")
+        CANCELLED = "cancelled", _("Not played")
 
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="matches")
     tournament = models.CharField(max_length=2, choices=Tournament.choices)
@@ -255,7 +257,7 @@ class Match(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.entry1} vs {self.entry2}"
+        return gettext("%(entry1)s vs %(entry2)s") % {"entry1": self.entry1, "entry2": self.entry2}
 
     @property
     def is_resolved(self):
@@ -283,10 +285,10 @@ class Match(models.Model):
     @property
     def stage_label(self):
         if self.stage == self.Stage.GROUP:
-            return f"Group {self.group.name}" if self.group_id else "Group"
+            return gettext("Group %(name)s") % {"name": self.group.name} if self.group_id else gettext("Group")
         if self.stage == self.Stage.SEMI:
-            return f"Semi-final {self.slot}"
-        return "Final"
+            return gettext("Semi-final %(slot)s") % {"slot": self.slot}
+        return gettext("Final")
 
     def has_player(self, user):
         return self.entry1.has_player(user) or self.entry2.has_player(user)

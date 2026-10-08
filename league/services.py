@@ -11,6 +11,7 @@ from itertools import combinations
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from .models import Entry, Group, Match, Season, Tournament
 from .scoring import evaluate, format_score
@@ -28,14 +29,15 @@ class LeagueError(Exception):
 
 def create_entry(season, player, partner=None, created_by=None):
     if partner is not None and partner.pk == player.pk:
-        raise LeagueError("You cannot be your own partner.")
+        raise LeagueError(_("You cannot be your own partner."))
     tournament = Tournament.for_players(player, partner)
     label = Tournament(tournament).label
     for person in (player, partner):
         if person is not None and (
             Entry.objects.active().filter(season=season, tournament=tournament).of_player(person).exists()
         ):
-            raise LeagueError(f"{person} already has an entry in {label}.")
+            raise LeagueError(_("%(player)s already has an entry in %(tournament)s.")
+                              % {"player": person, "tournament": label})
     return Entry.objects.create(
         season=season, tournament=tournament, player1=player, player2=partner,
         created_by=created_by or player,
@@ -53,9 +55,9 @@ def can_withdraw(entry):
 @transaction.atomic
 def withdraw_entry(entry):
     if not entry.is_active:
-        raise LeagueError("This entry has already been withdrawn.")
+        raise LeagueError(_("This entry has already been withdrawn."))
     if in_knockout(entry):
-        raise LeagueError("The knockout stage has begun – please ask the organiser.")
+        raise LeagueError(_("The knockout stage has begun – please ask the organiser."))
     entry.withdrawn_at = timezone.now()
     entry.save(update_fields=["withdrawn_at"])
     sync_tournament(entry.season, entry.tournament)
@@ -90,10 +92,10 @@ def assign_groups(season, tournament, assignment):
     if not changed:
         return 0
     if knockout_has_results(season, tournament):
-        raise LeagueError("The knockout stage already has results – groups can no longer be changed.")
+        raise LeagueError(_("The knockout stage already has results – groups can no longer be changed."))
     for entry, name in changed:
         if not entry.is_active or entry.season_id != season.pk or entry.tournament != tournament:
-            raise LeagueError(f"{entry} cannot be placed in this tournament.")
+            raise LeagueError(_("%(entry)s cannot be placed in this tournament.") % {"entry": entry})
         entry.group = get_group(season, tournament, name) if name else None
         entry.save(update_fields=["group"])
     sync_tournament(season, tournament)
@@ -103,9 +105,9 @@ def assign_groups(season, tournament, assignment):
 @transaction.atomic
 def random_split(season, tournament, group_count, rng=random):
     if group_count not in (1, 2):
-        raise LeagueError("A tournament has one or two groups.")
+        raise LeagueError(_("A tournament has one or two groups."))
     if has_results(season, tournament):
-        raise LeagueError("Results have already been entered – random split is no longer possible.")
+        raise LeagueError(_("Results have already been entered – random split is no longer possible."))
     entries = list(Entry.objects.active().filter(season=season, tournament=tournament))
     rng.shuffle(entries)
     groups = [get_group(season, tournament, name) for name in "AB"[:group_count]]
@@ -163,12 +165,12 @@ def active_groups(season, tournament):
 def knockout_layout(group_count):
     """Slots of the knockout stage with placeholder labels for both sides."""
     if group_count == 1:
-        return [(Match.Stage.FINAL, 1, "Final", "Winner", "Runner-up")]
+        return [(Match.Stage.FINAL, 1, _("Final"), _("Winner"), _("Runner-up"))]
     if group_count == 2:
         return [
-            (Match.Stage.SEMI, 1, "Semi-final 1", "Winner Group A", "Runner-up Group B"),
-            (Match.Stage.SEMI, 2, "Semi-final 2", "Winner Group B", "Runner-up Group A"),
-            (Match.Stage.FINAL, 1, "Final", "Winner semi-final 1", "Winner semi-final 2"),
+            (Match.Stage.SEMI, 1, _("Semi-final 1"), _("Winner Group A"), _("Runner-up Group B")),
+            (Match.Stage.SEMI, 2, _("Semi-final 2"), _("Winner Group B"), _("Runner-up Group A")),
+            (Match.Stage.FINAL, 1, _("Final"), _("Winner semi-final 1"), _("Winner semi-final 2")),
         ]
     return []
 
@@ -271,14 +273,14 @@ def record_result(match, sets, user):
 @transaction.atomic
 def record_walkover(match, winner, user):
     if winner.pk not in (match.entry1_id, match.entry2_id):
-        raise LeagueError("The winner must be one of the two entries.")
+        raise LeagueError(_("The winner must be one of the two entries."))
     _save_outcome(match, Match.Status.WALKOVER, user, winner=winner)
 
 
 @transaction.atomic
 def cancel_match(match, user):
     if match.is_knockout:
-        raise LeagueError("Knockout matches cannot be cancelled – record a walkover instead.")
+        raise LeagueError(_("Knockout matches cannot be cancelled – record a walkover instead."))
     _save_outcome(match, Match.Status.CANCELLED, user)
 
 
@@ -291,7 +293,7 @@ def reset_match(match, user):
 
 def start_season(season):
     if season.is_started:
-        raise LeagueError("The league has already started.")
+        raise LeagueError(_("The league has already started."))
     season.started_at = timezone.now()
     season.save(update_fields=["started_at"])
 

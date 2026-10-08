@@ -7,6 +7,7 @@ from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme, urlencode
+from django.utils.translation import gettext as _, ngettext
 from django.views.decorators.http import require_POST
 
 from . import services
@@ -70,7 +71,8 @@ def home(request):
         except LeagueError as error:
             form.add_error(None, str(error))
         else:
-            messages.success(request, f"You are entered in {entry.get_tournament_display()}.")
+            messages.success(request, _("You are entered in %(tournament)s.")
+                             % {"tournament": entry.get_tournament_display()})
             return redirect("league:home")
 
     entries = list(
@@ -95,6 +97,10 @@ def home(request):
         "my_groups": my_groups,
         "matches": matches,
         "open_count": sum(1 for m in matches if not m.is_resolved),
+        # Shown by app.js while the new entry form is filled in.
+        "tournament_previews": {
+            code: _("Tournament: %(tournament)s") % {"tournament": label} for code, label in Tournament.choices
+        },
     })
 
 
@@ -109,7 +115,8 @@ def withdraw(request, pk):
     except LeagueError as error:
         messages.error(request, str(error))
     else:
-        messages.success(request, f"{entry} has been withdrawn from {entry.get_tournament_display()}.")
+        messages.success(request, _("%(entry)s has been withdrawn from %(tournament)s.")
+                         % {"entry": entry, "tournament": entry.get_tournament_display()})
     return _redirect_next(request, "league:home")
 
 
@@ -117,14 +124,14 @@ def _lock_reason(match, user):
     if not match.has_player(user):
         return ""
     if not match.season.is_current:
-        return "This match belongs to a past season."
+        return _("This match belongs to a past season.")
     if not match.season.is_started:
-        return "Results can be entered once the league has started."
+        return _("Results can be entered once the league has started.")
     if match.status in (Match.Status.WALKOVER, Match.Status.CANCELLED):
-        return "This result was set by the organiser."
+        return _("This result was set by the organiser.")
     if not match.counts:
-        return "This match no longer counts because an entry withdrew or moved."
-    return "The next round already has a result – please ask the organiser for corrections."
+        return _("This match no longer counts because an entry withdrew or moved.")
+    return _("The next round already has a result – please ask the organiser for corrections.")
 
 
 @login_required
@@ -149,7 +156,7 @@ def match_detail(request, pk):
             except (LeagueError, ScoreError) as error:
                 form.add_error(None, str(error))
             else:
-                messages.success(request, "The result has been saved.")
+                messages.success(request, _("The result has been saved."))
                 return _redirect_next(request, reverse("league:match", args=[match.pk]))
     elif request.method == "POST":
         raise PermissionDenied
@@ -160,7 +167,7 @@ def match_detail(request, pk):
         "lock_reason": "" if can_edit else _lock_reason(match, user),
         "is_participant": match.has_player(user),
         "sides": [(match.entry1, match.entry1.players), (match.entry2, match.entry2.players)],
-        "tie_break_label": f"to {match.season.match_tiebreak_points}",
+        "tie_break_label": _("to %(points)s") % {"points": match.season.match_tiebreak_points},
     })
 
 
@@ -255,10 +262,14 @@ def close(request):
         what = Tournament(tournament).label
     elif scope == "all":
         count = services.close_all(season, request.user)
-        what = "all tournaments"
+        what = _("all tournaments")
     else:
         raise PermissionDenied
-    messages.success(request, f"Group phase closed for {what}: {count} open match(es) marked as not played.")
+    messages.success(request, ngettext(
+        "Group phase closed for %(what)s: %(count)d open match marked as not played.",
+        "Group phase closed for %(what)s: %(count)d open matches marked as not played.",
+        count,
+    ) % {"what": what, "count": count})
     return _redirect_next(request, "league:matches")
 
 
@@ -279,10 +290,12 @@ def groups(request):
                     value = request.POST.get(f"entry-{entry.pk}", "")
                     assignment[entry] = value if value in ("A", "B") else None
                 changed = services.assign_groups(season, tournament, assignment)
-                messages.success(request, f"Groups saved ({changed} change(s)).")
+                messages.success(request, ngettext(
+                    "Groups saved (%(count)d change).", "Groups saved (%(count)d changes).", changed,
+                ) % {"count": changed})
             elif action in ("random1", "random2"):
                 services.random_split(season, tournament, int(action[-1]))
-                messages.success(request, "Entries have been split randomly.")
+                messages.success(request, _("Entries have been split randomly."))
         except LeagueError as error:
             messages.error(request, str(error))
         return redirect(f"{reverse('league:groups')}?{urlencode({'t': tournament})}")
@@ -316,12 +329,12 @@ def settings_view(request):
     form = SeasonForm(request.POST if action == "save" else None, instance=season)
     if action == "save" and form.is_valid():
         form.save()
-        messages.success(request, "Settings saved.")
+        messages.success(request, _("Settings saved."))
         return redirect("league:settings")
     if action == "start":
         try:
             services.start_season(season)
-            messages.success(request, "The league has started. Good luck to everybody!")
+            messages.success(request, _("The league has started. Good luck to everybody!"))
         except LeagueError as error:
             messages.error(request, str(error))
         return redirect("league:settings")

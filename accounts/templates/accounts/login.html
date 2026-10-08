@@ -1,14 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Log in{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Log in" %}{% endblock %}
 {% block content %}
 <div class="card narrow">
-  <h1>Log in</h1>
-  <p class="muted">Enter your email address. We will send you a login code – no password needed.</p>
+  <h1>{% translate "Log in" %}</h1>
+  <p class="muted">{% translate "Enter your email address. We will send you a login code – no password needed." %}</p>
   <form method="post">
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
-    <button type="submit" class="block">Send login code</button>
+    <button type="submit" class="block">{% translate "Send login code" %}</button>
   </form>
-  <p class="small muted">New here? <a href="{% url 'accounts:register' %}">Register</a></p>
+  <p class="small muted">{% translate "New here?" %} <a href="{% url 'accounts:register' %}">{% translate "Register" %}</a></p>
 </div>
 {% endblock %}

@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Log in{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Log in" %}{% endblock %}
 {% block content %}
 <div class="card narrow">
-  <h1>Log in on this device</h1>
-  <p>Continue as <strong>{{ login_user.get_full_name }}</strong> ({{ login_user.email }})?</p>
+  <h1>{% translate "Log in on this device" %}</h1>
+  <p>{% blocktranslate with name=login_user.get_full_name email=login_user.email %}Continue as <strong>{{ name }}</strong> ({{ email }})?{% endblocktranslate %}</p>
   <form method="post">
     {% csrf_token %}
-    <button type="submit" class="block">Log in</button>
+    <button type="submit" class="block">{% translate "Log in" %}</button>
   </form>
 </div>
 {% endblock %}

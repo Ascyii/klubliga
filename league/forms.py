@@ -1,5 +1,6 @@
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.translation import gettext_lazy as _
 
 from accounts.models import User
 
@@ -25,13 +26,13 @@ class PartnerField(forms.ModelChoiceField):
 
 class EntryForm(forms.Form):
     kind = forms.ChoiceField(
-        label="Format", choices=[("singles", "Singles"), ("doubles", "Doubles")],
+        label=_("Format"), choices=[("singles", _("Singles")), ("doubles", _("Doubles"))],
         widget=forms.RadioSelect, initial="singles",
     )
     partner = PartnerField(
         queryset=User.objects.none(), required=False, widget=PartnerSelect,
-        empty_label="– choose your partner –",
-        help_text="Members appear here after their first login.",
+        label=_("Partner"), empty_label=_("– choose your partner –"),
+        help_text=_("Members appear here after their first login."),
     )
 
     def __init__(self, *args, user, **kwargs):
@@ -45,7 +46,7 @@ class EntryForm(forms.Form):
         data = super().clean()
         if data.get("kind") == "doubles":
             if not data.get("partner"):
-                self.add_error("partner", "Please choose your partner.")
+                self.add_error("partner", _("Please choose your partner."))
         else:
             data["partner"] = None
         return data
@@ -70,27 +71,27 @@ class ResultForm(forms.Form):
                     self.initial[name] = current[index][side - 1]
         if admin:
             choices = [
-                ("played", "Played – score below"),
-                ("w1", f"Walkover – {match.entry1} wins"),
-                ("w2", f"Walkover – {match.entry2} wins"),
+                ("played", _("Played – score below")),
+                ("w1", _("Walkover – %(entry)s wins") % {"entry": match.entry1}),
+                ("w2", _("Walkover – %(entry)s wins") % {"entry": match.entry2}),
             ]
             if not match.is_knockout:
-                choices.append(("cancelled", "Not played"))
-            choices.append(("pending", "Open – no result yet"))
+                choices.append(("cancelled", _("Not played")))
+            choices.append(("pending", _("Open – no result yet")))
             initial = {
                 Match.Status.WALKOVER: "w1" if match.winner_id == match.entry1_id else "w2",
                 Match.Status.CANCELLED: "cancelled",
                 Match.Status.PENDING: "played",
             }.get(match.status, "played")
             self.fields["outcome"] = forms.ChoiceField(
-                label="Result", choices=choices, initial=initial, widget=forms.RadioSelect)
+                label=_("Result"), choices=choices, initial=initial, widget=forms.RadioSelect)
 
     def set_rows(self):
         rows = []
         for index in range(self.rules.best_of):
             tiebreak = self.rules.is_tiebreak_set(index)
             rows.append({
-                "label": "Match tie-break" if tiebreak else f"Set {index + 1}",
+                "label": _("Match tie-break") if tiebreak else _("Set %(number)s") % {"number": index + 1},
                 "tiebreak": tiebreak,
                 "side1": self[f"s{index + 1}_1"],
                 "side2": self[f"s{index + 1}_2"],
@@ -108,9 +109,10 @@ class ResultForm(forms.Form):
                 gap = True
                 continue
             if a is None or b is None:
-                raise forms.ValidationError(f"Set {index + 1}: please enter the score of both sides.")
+                raise forms.ValidationError(
+                    _("Set %(number)s: please enter the score of both sides.") % {"number": index + 1})
             if gap:
-                raise forms.ValidationError("Please fill in the sets in order.")
+                raise forms.ValidationError(_("Please fill in the sets in order."))
             sets.append((a, b))
         try:
             evaluate(sets, self.rules)
@@ -124,6 +126,7 @@ class SeasonForm(forms.ModelForm):
     class Meta:
         model = Season
         fields = Season.SETTING_FIELDS
+        labels = {"games_per_set": _("Games per set")}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

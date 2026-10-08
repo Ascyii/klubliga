@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
@@ -37,13 +38,13 @@ class User(AbstractUser):
     """A club member, identified by email. Passwords are never used."""
 
     class Sex(models.TextChoices):
-        MALE = "M", "Male"
-        FEMALE = "F", "Female"
+        MALE = "M", _("Male")
+        FEMALE = "F", _("Female")
 
     username = None
-    email = models.EmailField("email address", unique=True)
-    first_name = models.CharField("first name", max_length=150)
-    last_name = models.CharField("last name", max_length=150)
+    email = models.EmailField(_("email address"), unique=True)
+    first_name = models.CharField(_("first name"), max_length=150)
+    last_name = models.CharField(_("last name"), max_length=150)
     sex = models.CharField(max_length=1, choices=Sex.choices)
 
     USERNAME_FIELD = "email"

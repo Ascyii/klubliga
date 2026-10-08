@@ -32,7 +32,7 @@ class EntryServiceTests(TestCase):
 
     def test_one_active_entry_per_tournament(self):
         services.create_entry(self.season, self.max, self.eva)
-        with self.assertRaisesMessage(LeagueError, "already has an entry in Mixed Doubles"):
+        with self.assertRaisesMessage(LeagueError, "ist bereits für Mixed gemeldet"):
             services.create_entry(self.season, self.max, make_user(sex="F"))
         with self.assertRaisesMessage(LeagueError, str(self.eva)):
             services.create_entry(self.season, make_user(sex="M"), self.eva)
@@ -112,7 +112,7 @@ class GroupServiceTests(TestCase):
         with self.assertRaises(LeagueError):
             services.random_split(self.season, "MS", 3)
         win(Match.objects.first(), Match.objects.first().entry1)
-        with self.assertRaisesMessage(LeagueError, "Results have already been entered"):
+        with self.assertRaisesMessage(LeagueError, "Es wurden schon Ergebnisse eingetragen"):
             services.random_split(self.season, "MS", 2)
 
     def test_suggested_group_count(self):
@@ -201,7 +201,7 @@ class KnockoutTests(TestCase):
     def test_single_group_final(self):
         a, b, c = singles(self.season, 3)
         place(self.season, [a, b, c], "A")
-        self.assertEqual(services.knockout_layout(1)[0][2], "Final")
+        self.assertEqual(services.knockout_layout(1)[0][2], "Finale")
         play_round_robin([c, a, b])
         final = ko(self.season)[("final", 1)]
         self.assertEqual((final.entry1, final.entry2), (c, a))

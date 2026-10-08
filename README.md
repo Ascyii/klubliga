@@ -9,6 +9,9 @@ semi-finals and finals automatically.
 It is built to be used on a phone at the courts: few pages, big buttons, no
 app store, no password.
 
+The app speaks German. This README uses the English terms of the source code;
+in the app a tournament is a *Wettbewerb*, an entry a *Meldung*, and so on.
+
 ---
 
 ## The words we use
@@ -214,6 +217,20 @@ Configuration is done through environment variables:
 | `LOCAL_ENV` | `1` to skip certificate checking for email | `0` |
 | `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `EMAIL_USE_SSL` | SMTP server. Without `EMAIL_HOST`, mails go to the console. | – |
 | `DEFAULT_FROM_EMAIL` | Sender address of login mails | `klubliga@localhost` |
+
+### Translations
+
+The interface is German (`LANGUAGE_CODE = "de"`). Texts in the code and
+templates are written in English and marked for translation; the German texts
+live in `locale/de/LC_MESSAGES/django.po`. The compiled `django.mo` is
+committed, so running the app needs no extra tools. After changing texts
+(requires GNU gettext):
+
+```bash
+uv run manage.py makemessages -l de --no-location --ignore=.venv --ignore=staticfiles
+# translate the new entries in locale/de/LC_MESSAGES/django.po, then
+uv run manage.py compilemessages --ignore=.venv
+```
 
 ### Production
 

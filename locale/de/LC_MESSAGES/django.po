@@ -1,0 +1,881 @@
+# German translation of Klubliga.
+msgid ""
+msgstr ""
+"Project-Id-Version: klubliga\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-08 13:28+0200\n"
+"PO-Revision-Date: 2026-10-08 13:28+0200\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+msgid "Sex"
+msgstr "Geschlecht"
+
+msgid "Decides which tournaments you can enter."
+msgstr "Bestimmt, für welche Wettbewerbe du dich melden kannst."
+
+msgid "This address is already registered. Please log in instead."
+msgstr ""
+"Diese Adresse ist bereits registriert. Bitte melde dich stattdessen an."
+
+msgid "Login code"
+msgstr "Anmeldecode"
+
+msgid "Male"
+msgstr "Männlich"
+
+msgid "Female"
+msgstr "Weiblich"
+
+msgid "email address"
+msgstr "E-Mail-Adresse"
+
+msgid "first name"
+msgstr "Vorname"
+
+msgid "last name"
+msgstr "Nachname"
+
+msgid "Enter code"
+msgstr "Code eingeben"
+
+msgid "Enter your code"
+msgstr "Code eingeben"
+
+#, python-format
+msgid ""
+"We emailed a 6-digit code to <strong>%(email)s</strong>. You can also just "
+"tap the link in that email."
+msgstr ""
+"Wir haben einen 6-stelligen Code an <strong>%(email)s</strong> geschickt. Du"
+" kannst auch einfach auf den Link in der E-Mail tippen."
+
+msgid "Log in"
+msgstr "Anmelden"
+
+msgid "Send a new code"
+msgstr "Neuen Code senden"
+
+msgid "Use another address"
+msgstr "Andere Adresse verwenden"
+
+msgid "Log in on this device"
+msgstr "Auf diesem Gerät anmelden"
+
+#, python-format
+msgid "Continue as <strong>%(name)s</strong> (%(email)s)?"
+msgstr "Weiter als <strong>%(name)s</strong> (%(email)s)?"
+
+msgid ""
+"Enter your email address. We will send you a login code – no password "
+"needed."
+msgstr ""
+"Gib deine E-Mail-Adresse ein. Wir schicken dir einen Anmeldecode – ganz ohne"
+" Passwort."
+
+msgid "Send login code"
+msgstr "Anmeldecode senden"
+
+msgid "New here?"
+msgstr "Neu hier?"
+
+msgid "Register"
+msgstr "Registrieren"
+
+#, python-format
+msgid ""
+"Hello %(name)s,\n"
+"\n"
+"your login code for %(league_name)s is:"
+msgstr ""
+"Hallo %(name)s,\n"
+"\n"
+"dein Anmeldecode für die %(league_name)s lautet:"
+
+msgid "Or open this link to log in on the device you are reading this on:"
+msgstr ""
+"Oder öffne diesen Link, um dich auf dem Gerät anzumelden, auf dem du diese "
+"E-Mail liest:"
+
+#, python-format
+msgid ""
+"Code and link are valid for %(days)s days and can be used once.\n"
+"If you did not ask for this, simply ignore this email."
+msgstr ""
+"Code und Link sind %(days)s Tage gültig und können einmal verwendet werden.\n"
+"Wenn du das nicht angefordert hast, ignoriere diese E-Mail einfach."
+
+#, python-format
+msgid "%(league_name)s: your login code %(code)s"
+msgstr "%(league_name)s: dein Anmeldecode %(code)s"
+
+#, python-format
+msgid ""
+"Sign up for the %(league_name)s %(year)s. We will email you a login code to "
+"confirm your address."
+msgstr ""
+"Melde dich für die %(league_name)s %(year)s an. Wir schicken dir einen "
+"Anmeldecode, um deine Adresse zu bestätigen."
+
+msgid "Already registered?"
+msgstr "Schon registriert?"
+
+#, python-format
+msgid "Welcome, %(name)s!"
+msgstr "Willkommen, %(name)s!"
+
+#, python-format
+msgid "We sent a login code to %(email)s."
+msgstr "Wir haben einen Anmeldecode an %(email)s geschickt."
+
+msgid "A code was sent less than a minute ago – please check your inbox."
+msgstr ""
+"Vor weniger als einer Minute wurde schon ein Code verschickt – bitte schau "
+"in dein Postfach."
+
+msgid "No account with this address yet – please register."
+msgstr "Zu dieser Adresse gibt es noch kein Konto – bitte registriere dich."
+
+msgid "This account is disabled."
+msgstr "Dieses Konto ist deaktiviert."
+
+msgid "This code is wrong or has expired."
+msgstr "Dieser Code ist falsch oder abgelaufen."
+
+msgid "This login link is invalid or has expired. Please request a new code."
+msgstr ""
+"Dieser Anmeldelink ist ungültig oder abgelaufen. Bitte fordere einen neuen "
+"Code an."
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Singles"
+msgstr "Einzel"
+
+msgid "Doubles"
+msgstr "Doppel"
+
+msgid "Partner"
+msgstr "Partner/in"
+
+msgid "– choose your partner –"
+msgstr "– Partner/in wählen –"
+
+msgid "Members appear here after their first login."
+msgstr "Mitglieder erscheinen hier nach ihrer ersten Anmeldung."
+
+msgid "Please choose your partner."
+msgstr "Bitte wähle deine Partnerin oder deinen Partner."
+
+msgid "Played – score below"
+msgstr "Gespielt – Ergebnis unten"
+
+#, python-format
+msgid "Walkover – %(entry)s wins"
+msgstr "Kampflos – %(entry)s gewinnt"
+
+msgid "Not played"
+msgstr "Nicht gespielt"
+
+msgid "Open – no result yet"
+msgstr "Offen – noch kein Ergebnis"
+
+msgid "Result"
+msgstr "Ergebnis"
+
+msgid "Match tie-break"
+msgstr "Match-Tiebreak"
+
+#, python-format
+msgid "Set %(number)s"
+msgstr "Satz %(number)s"
+
+#, python-format
+msgid "Set %(number)s: please enter the score of both sides."
+msgstr "Satz %(number)s: Bitte gib das Ergebnis beider Seiten ein."
+
+msgid "Please fill in the sets in order."
+msgstr "Bitte trage die Sätze der Reihe nach ein."
+
+msgid "Games per set"
+msgstr "Spiele pro Satz"
+
+msgid "Men's Singles"
+msgstr "Herreneinzel"
+
+msgid "Women's Singles"
+msgstr "Dameneinzel"
+
+msgid "Men's Doubles"
+msgstr "Herrendoppel"
+
+msgid "Women's Doubles"
+msgstr "Damendoppel"
+
+msgid "Mixed Doubles"
+msgstr "Mixed"
+
+msgid "1 set"
+msgstr "1 Satz"
+
+msgid "Best of 3 sets"
+msgstr "2 Gewinnsätze (Best of 3)"
+
+msgid "Best of 5 sets"
+msgstr "3 Gewinnsätze (Best of 5)"
+
+msgid "league name"
+msgstr "Name der Liga"
+
+msgid "sets per match"
+msgstr "Sätze pro Match"
+
+msgid "deciding set is a match tie-break"
+msgstr "Entscheidungssatz als Match-Tiebreak"
+
+msgid "points in the match tie-break"
+msgstr "Punkte im Match-Tiebreak"
+
+msgid "suggest two groups from"
+msgstr "Zwei Gruppen vorschlagen ab"
+
+msgid "Number of entries in a tournament from which two groups are suggested."
+msgstr ""
+"Anzahl der Meldungen in einem Wettbewerb, ab der zwei Gruppen vorgeschlagen "
+"werden."
+
+msgid "Group A"
+msgstr "Gruppe A"
+
+msgid "Group B"
+msgstr "Gruppe B"
+
+#, python-format
+msgid "%(tournament)s – Group %(name)s"
+msgstr "%(tournament)s – Gruppe %(name)s"
+
+msgid "Registered"
+msgstr "Gemeldet"
+
+msgid "Placed in a group"
+msgstr "In einer Gruppe"
+
+msgid "Waiting for admission"
+msgstr "Wartet auf Zulassung"
+
+msgid "Withdrawn"
+msgstr "Zurückgezogen"
+
+#, python-format
+msgid "Group %(name)s"
+msgstr "Gruppe %(name)s"
+
+msgid "Group"
+msgstr "Gruppe"
+
+msgid "Semi-final"
+msgstr "Halbfinale"
+
+msgid "Final"
+msgstr "Finale"
+
+msgid "Open"
+msgstr "Offen"
+
+msgid "Played"
+msgstr "Gespielt"
+
+msgid "Walkover"
+msgstr "Kampflos"
+
+#, python-format
+msgid "%(entry1)s vs %(entry2)s"
+msgstr "%(entry1)s gegen %(entry2)s"
+
+#, python-format
+msgid "Semi-final %(slot)s"
+msgstr "Halbfinale %(slot)s"
+
+#, python-format
+msgid "Cannot read the set score “%(set)s”."
+msgstr "Das Satzergebnis „%(set)s“ ist nicht lesbar."
+
+msgid "A set cannot end in a draw."
+msgstr "Ein Satz kann nicht unentschieden enden."
+
+#, python-format
+msgid "A match tie-break is won with at least %(points)s points."
+msgstr "Ein Match-Tiebreak wird mit mindestens %(points)s Punkten gewonnen."
+
+msgid "A match tie-break must be won by two points."
+msgstr "Ein Match-Tiebreak muss mit zwei Punkten Vorsprung gewonnen werden."
+
+#, python-format
+msgid "Beyond %(points)s points a match tie-break ends with a two-point lead."
+msgstr ""
+"Über %(points)s Punkte hinaus endet ein Match-Tiebreak mit genau zwei "
+"Punkten Vorsprung."
+
+#, python-format
+msgid "%(a)s:%(b)s is not a valid set score."
+msgstr "%(a)s:%(b)s ist kein gültiges Satzergebnis."
+
+msgid "Please enter the score."
+msgstr "Bitte gib das Ergebnis ein."
+
+msgid "Too many sets: the match was already decided."
+msgstr "Zu viele Sätze: Das Match war schon entschieden."
+
+#, python-format
+msgid "Set %(number)s: %(error)s"
+msgstr "Satz %(number)s: %(error)s"
+
+#, python-format
+msgid "The match is not finished: %(sets)s sets are needed to win."
+msgstr "Das Match ist nicht beendet: Zum Sieg sind %(sets)s Sätze nötig."
+
+msgid "You cannot be your own partner."
+msgstr "Du kannst nicht dein eigener Partner sein."
+
+#, python-format
+msgid "%(player)s already has an entry in %(tournament)s."
+msgstr "%(player)s ist bereits für %(tournament)s gemeldet."
+
+msgid "This entry has already been withdrawn."
+msgstr "Diese Meldung wurde bereits zurückgezogen."
+
+msgid "The knockout stage has begun – please ask the organiser."
+msgstr "Die K.-o.-Runde hat begonnen – bitte wende dich an die Spielleitung."
+
+msgid ""
+"The knockout stage already has results – groups can no longer be changed."
+msgstr ""
+"In der K.-o.-Runde gibt es schon Ergebnisse – die Gruppen können nicht mehr "
+"geändert werden."
+
+#, python-format
+msgid "%(entry)s cannot be placed in this tournament."
+msgstr "%(entry)s kann in diesem Wettbewerb nicht eingeteilt werden."
+
+msgid "A tournament has one or two groups."
+msgstr "Ein Wettbewerb hat eine oder zwei Gruppen."
+
+msgid ""
+"Results have already been entered – random split is no longer possible."
+msgstr ""
+"Es wurden schon Ergebnisse eingetragen – eine zufällige Einteilung ist nicht"
+" mehr möglich."
+
+msgid "Winner"
+msgstr "Sieger"
+
+msgid "Runner-up"
+msgstr "Zweiter"
+
+msgid "Semi-final 1"
+msgstr "Halbfinale 1"
+
+msgid "Winner Group A"
+msgstr "Sieger Gruppe A"
+
+msgid "Runner-up Group B"
+msgstr "Zweiter Gruppe B"
+
+msgid "Semi-final 2"
+msgstr "Halbfinale 2"
+
+msgid "Winner Group B"
+msgstr "Sieger Gruppe B"
+
+msgid "Runner-up Group A"
+msgstr "Zweiter Gruppe A"
+
+msgid "Winner semi-final 1"
+msgstr "Sieger Halbfinale 1"
+
+msgid "Winner semi-final 2"
+msgstr "Sieger Halbfinale 2"
+
+msgid "The winner must be one of the two entries."
+msgstr "Der Sieger muss eine der beiden Meldungen sein."
+
+msgid "Knockout matches cannot be cancelled – record a walkover instead."
+msgstr ""
+"K.-o.-Matches können nicht ausfallen – trage stattdessen einen kampflosen "
+"Sieg ein."
+
+msgid "The league has already started."
+msgstr "Die Liga hat bereits begonnen."
+
+msgctxt "walkover, short"
+msgid "w/o"
+msgstr "w.o."
+
+msgid "open"
+msgstr "offen"
+
+msgid "walkover"
+msgstr "kampflos"
+
+msgid "not played"
+msgstr "nicht gespielt"
+
+msgid "does not count"
+msgstr "zählt nicht"
+
+msgid "Entry"
+msgstr "Meldung"
+
+msgid "Matches played"
+msgstr "Gespielte Matches"
+
+msgctxt "matches played, column"
+msgid "M"
+msgstr "M"
+
+msgid "Won"
+msgstr "Gewonnen"
+
+msgctxt "won, column"
+msgid "W"
+msgstr "S"
+
+msgid "Lost"
+msgstr "Verloren"
+
+msgctxt "lost, column"
+msgid "L"
+msgstr "N"
+
+msgid "Sets"
+msgstr "Sätze"
+
+msgid "Games"
+msgstr "Spiele"
+
+msgid "No entries yet."
+msgstr "Noch keine Meldungen."
+
+msgid "Groups"
+msgstr "Gruppen"
+
+msgid "Tournaments"
+msgstr "Wettbewerbe"
+
+#, python-format
+msgid "%(count)s active entry"
+msgid_plural "%(count)s active entries"
+msgstr[0] "%(count)s aktive Meldung"
+msgstr[1] "%(count)s aktive Meldungen"
+
+#, python-format
+msgid "Group A: %(a)s · Group B: %(b)s"
+msgstr "Gruppe A: %(a)s · Gruppe B: %(b)s"
+
+#, python-format
+msgid "%(count)s not placed"
+msgid_plural "%(count)s not placed"
+msgstr[0] "%(count)s nicht eingeteilt"
+msgstr[1] "%(count)s nicht eingeteilt"
+
+#, python-format
+msgid "Suggested: %(count)s group."
+msgid_plural "Suggested: %(count)s groups."
+msgstr[0] "Vorschlag: %(count)s Gruppe."
+msgstr[1] "Vorschlag: %(count)s Gruppen."
+
+msgid "The knockout stage already has results – the groups are locked."
+msgstr ""
+"In der K.-o.-Runde gibt es schon Ergebnisse – die Gruppen sind gesperrt."
+
+msgid "Put all entries into one group? Existing assignments are replaced."
+msgstr ""
+"Alle Meldungen in eine Gruppe einteilen? Bestehende Einteilungen werden "
+"ersetzt."
+
+msgid "Random: 1 group"
+msgstr "Zufällig: 1 Gruppe"
+
+msgid ""
+"Split all entries randomly into two groups? Existing assignments are "
+"replaced."
+msgstr ""
+"Alle Meldungen zufällig auf zwei Gruppen verteilen? Bestehende Einteilungen "
+"werden ersetzt."
+
+msgid "Random: 2 groups"
+msgstr "Zufällig: 2 Gruppen"
+
+msgid "waiting"
+msgstr "wartet"
+
+msgid "not placed"
+msgstr "nicht eingeteilt"
+
+#, python-format
+msgid "Group of %(entry)s"
+msgstr "Gruppe von %(entry)s"
+
+#, python-format
+msgid "Remove %(entry)s from %(tournament_label)s? Open matches are deleted."
+msgstr ""
+"%(entry)s aus %(tournament_label)s entfernen? Offene Matches werden "
+"gelöscht."
+
+msgid "Already in the knockout stage"
+msgstr "Schon in der K.-o.-Runde"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "Save groups"
+msgstr "Gruppen speichern"
+
+msgid "No entries in this tournament."
+msgstr "Keine Meldungen in diesem Wettbewerb."
+
+msgid "Home"
+msgstr "Start"
+
+msgid "The league is running."
+msgstr "Die Liga läuft."
+
+#, python-format
+msgid "since %(date)s"
+msgstr "seit %(date)s"
+
+msgid ""
+"Arrange your matches with your opponents and enter the results below. Late "
+"entries are admitted by the organiser."
+msgstr ""
+"Vereinbare deine Matches mit deinen Gegnern und trage die Ergebnisse unten "
+"ein. Nachmeldungen lässt die Spielleitung zu."
+
+msgid "Entries are open."
+msgstr "Die Meldephase läuft."
+
+msgid "not started yet"
+msgstr "noch nicht gestartet"
+
+msgid ""
+"Enter the tournaments you want to play. The organiser will form the groups "
+"and start the league."
+msgstr ""
+"Melde dich für die Wettbewerbe, die du spielen möchtest. Die Spielleitung "
+"teilt die Gruppen ein und startet die Liga."
+
+msgid "My entries"
+msgstr "Meine Meldungen"
+
+#, python-format
+msgid "Withdraw from %(tournament)s? Your open matches will be removed."
+msgstr ""
+"Meldung für %(tournament)s zurückziehen? Deine offenen Matches werden "
+"entfernt."
+
+msgid "Withdraw"
+msgstr "Zurückziehen"
+
+msgid "You have not entered any tournament yet."
+msgstr "Du hast dich noch für keinen Wettbewerb gemeldet."
+
+msgid "New entry"
+msgstr "Neue Meldung"
+
+msgid "Enter"
+msgstr "Melden"
+
+msgid "My groups"
+msgstr "Meine Gruppen"
+
+msgid "All matches"
+msgstr "Alle Matches"
+
+msgid "My matches"
+msgstr "Meine Matches"
+
+#, python-format
+msgid "%(count)s open"
+msgid_plural "%(count)s open"
+msgstr[0] "%(count)s offen"
+msgstr[1] "%(count)s offen"
+
+msgid "Your matches appear here once you have been placed in a group."
+msgstr ""
+"Deine Matches erscheinen hier, sobald du in eine Gruppe eingeteilt bist."
+
+msgid "This match no longer counts: an entry withdrew or changed groups."
+msgstr ""
+"Dieses Match zählt nicht mehr: Eine Meldung wurde zurückgezogen oder hat die"
+" Gruppe gewechselt."
+
+msgid "winner"
+msgstr "Sieger"
+
+msgid "withdrawn"
+msgstr "zurückgezogen"
+
+#, python-format
+msgid "Entered %(date)s by %(name)s."
+msgstr "Eingetragen am %(date)s von %(name)s."
+
+#, python-format
+msgid "Entered %(date)s."
+msgstr "Eingetragen am %(date)s."
+
+msgid "Enter result"
+msgstr "Ergebnis eintragen"
+
+msgid "Change result"
+msgstr "Ergebnis ändern"
+
+#, python-brace-format
+msgid "Winner: {name} ({sets} sets)"
+msgstr "Sieger: {name} ({sets} Sätze)"
+
+msgid "Save result"
+msgstr "Ergebnis speichern"
+
+msgid "Season"
+msgstr "Saison"
+
+msgid "Show"
+msgstr "Anzeigen"
+
+msgid "finished"
+msgstr "beendet"
+
+#, python-format
+msgid ""
+"Close the group phase of Group %(name)s? %(count)s open match will be marked"
+" as not played."
+msgid_plural ""
+"Close the group phase of Group %(name)s? %(count)s open matches will be "
+"marked as not played."
+msgstr[0] ""
+"Gruppenphase von Gruppe %(name)s abschließen? %(count)s offenes Match wird "
+"als nicht gespielt markiert."
+msgstr[1] ""
+"Gruppenphase von Gruppe %(name)s abschließen? %(count)s offene Matches "
+"werden als nicht gespielt markiert."
+
+msgid "Close group phase"
+msgstr "Gruppenphase abschließen"
+
+msgid "No groups have been formed for this tournament yet."
+msgstr "Für diesen Wettbewerb wurden noch keine Gruppen gebildet."
+
+msgid "No groups have been formed for this tournament."
+msgstr "Für diesen Wettbewerb wurden keine Gruppen gebildet."
+
+#, python-format
+msgid "Admin: no more group matches will be played in %(tournament_label)s?"
+msgstr ""
+"Admin: In %(tournament_label)s werden keine Gruppenmatches mehr gespielt?"
+
+#, python-format
+msgid ""
+"Close the group phase of all groups in %(tournament_label)s? All open group "
+"matches will be marked as not played."
+msgstr ""
+"Gruppenphase aller Gruppen in %(tournament_label)s abschließen? Alle offenen"
+" Gruppenmatches werden als nicht gespielt markiert."
+
+msgid "Close group phase of tournament"
+msgstr "Gruppenphase des Wettbewerbs abschließen"
+
+msgid "Knockout stage"
+msgstr "K.-o.-Runde"
+
+msgid "Matches"
+msgstr "Matches"
+
+msgid "Stage"
+msgstr "Runde"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "Knockout"
+msgstr "K.-o.-Runde"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Finished"
+msgstr "Beendet"
+
+msgid "Player"
+msgstr "Spieler/in"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Only mine"
+msgstr "Nur meine"
+
+msgid "Filter"
+msgstr "Filtern"
+
+msgid "No matches found."
+msgstr "Keine Matches gefunden."
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+#, python-format
+msgid "Settings %(year)s"
+msgstr "Einstellungen %(year)s"
+
+#, python-format
+msgid "The league started on %(date)s."
+msgstr "Die Liga hat am %(date)s begonnen."
+
+msgid "The league has not started yet."
+msgstr "Die Liga hat noch nicht begonnen."
+
+msgid ""
+"Form the groups first, then start the league. Entries made afterwards wait "
+"for admission."
+msgstr ""
+"Bilde zuerst die Gruppen, dann starte die Liga. Spätere Meldungen warten auf"
+" Zulassung."
+
+msgid "Start the league now? Players can then enter results."
+msgstr "Liga jetzt starten? Danach können Ergebnisse eingetragen werden."
+
+msgid "Start league"
+msgstr "Liga starten"
+
+msgid "Overview"
+msgstr "Übersicht"
+
+msgid "Tournament"
+msgstr "Wettbewerb"
+
+msgid "Entries"
+msgstr "Meldungen"
+
+msgid "Not placed"
+msgstr "Nicht eingeteilt"
+
+msgid "Done"
+msgstr "Erledigt"
+
+msgid "scheduled"
+msgstr "angesetzt"
+
+msgid ""
+"Close the group phase of ALL tournaments? All open group matches will be "
+"marked as not played."
+msgstr ""
+"Gruppenphase ALLER Wettbewerbe abschließen? Alle offenen Gruppenmatches "
+"werden als nicht gespielt markiert."
+
+msgid "Close group phase of all tournaments"
+msgstr "Gruppenphase aller Wettbewerbe abschließen"
+
+msgid "Rules"
+msgstr "Regeln"
+
+msgid "Save settings"
+msgstr "Einstellungen speichern"
+
+msgid ""
+"Changes apply to results entered from now on. Settings are copied to the "
+"next season automatically."
+msgstr ""
+"Änderungen gelten für alle ab jetzt eingetragenen Ergebnisse. Die "
+"Einstellungen werden automatisch in die nächste Saison übernommen."
+
+#, python-format
+msgid "You are entered in %(tournament)s."
+msgstr "Du bist für %(tournament)s gemeldet."
+
+#, python-format
+msgid "Tournament: %(tournament)s"
+msgstr "Wettbewerb: %(tournament)s"
+
+#, python-format
+msgid "%(entry)s has been withdrawn from %(tournament)s."
+msgstr "Die Meldung von %(entry)s für %(tournament)s wurde zurückgezogen."
+
+msgid "This match belongs to a past season."
+msgstr "Dieses Match gehört zu einer vergangenen Saison."
+
+msgid "Results can be entered once the league has started."
+msgstr "Ergebnisse können eingetragen werden, sobald die Liga begonnen hat."
+
+msgid "This result was set by the organiser."
+msgstr "Dieses Ergebnis hat die Spielleitung festgelegt."
+
+msgid "This match no longer counts because an entry withdrew or moved."
+msgstr ""
+"Dieses Match zählt nicht mehr, weil eine Meldung zurückgezogen wurde oder "
+"die Gruppe gewechselt hat."
+
+msgid ""
+"The next round already has a result – please ask the organiser for "
+"corrections."
+msgstr ""
+"In der nächsten Runde gibt es schon ein Ergebnis – für Korrekturen wende "
+"dich bitte an die Spielleitung."
+
+msgid "The result has been saved."
+msgstr "Das Ergebnis wurde gespeichert."
+
+#, python-format
+msgid "to %(points)s"
+msgstr "bis %(points)s"
+
+msgid "all tournaments"
+msgstr "alle Wettbewerbe"
+
+#, python-format
+msgid ""
+"Group phase closed for %(what)s: %(count)d open match marked as not played."
+msgid_plural ""
+"Group phase closed for %(what)s: %(count)d open matches marked as not "
+"played."
+msgstr[0] ""
+"Gruppenphase abgeschlossen für %(what)s: %(count)d offenes Match als nicht "
+"gespielt markiert."
+msgstr[1] ""
+"Gruppenphase abgeschlossen für %(what)s: %(count)d offene Matches als nicht "
+"gespielt markiert."
+
+#, python-format
+msgid "Groups saved (%(count)d change)."
+msgid_plural "Groups saved (%(count)d changes)."
+msgstr[0] "Gruppen gespeichert (%(count)d Änderung)."
+msgstr[1] "Gruppen gespeichert (%(count)d Änderungen)."
+
+msgid "Entries have been split randomly."
+msgstr "Die Meldungen wurden zufällig eingeteilt."
+
+msgid "Settings saved."
+msgstr "Einstellungen gespeichert."
+
+msgid "The league has started. Good luck to everybody!"
+msgstr "Die Liga hat begonnen. Viel Erfolg allen!"
+
+#, python-format
+msgid "Logged in as %(email)s."
+msgstr "Angemeldet als %(email)s."
+
+msgid "Log out on this device? To log in again you need a new code by email."
+msgstr ""
+"Auf diesem Gerät abmelden? Zum erneuten Anmelden brauchst du einen neuen "
+"Code per E-Mail."
+
+msgid "Log out"
+msgstr "Abmelden"

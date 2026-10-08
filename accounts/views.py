@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.translation import gettext as _
 
 from . import services
 from .forms import CodeForm, EmailForm, RegistrationForm
@@ -24,16 +25,16 @@ def _finish_login(request, user):
     next_url = request.session.pop(SESSION_NEXT, None)
     request.session.pop(SESSION_EMAIL, None)
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-    messages.success(request, f"Welcome, {user.first_name}!")
+    messages.success(request, _("Welcome, %(name)s!") % {"name": user.first_name})
     return redirect(next_url or "league:home")
 
 
 def _send_code(request, user):
     request.session[SESSION_EMAIL] = user.email
     if services.request_login(request, user):
-        messages.info(request, f"We sent a login code to {user.email}.")
+        messages.info(request, _("We sent a login code to %(email)s.") % {"email": user.email})
     else:
-        messages.warning(request, "A code was sent less than a minute ago – please check your inbox.")
+        messages.warning(request, _("A code was sent less than a minute ago – please check your inbox."))
     return redirect("accounts:code")
 
 
@@ -47,9 +48,9 @@ def login_view(request):
         user = User.objects.filter(email=email).first()
         if user is None or not user.is_active:
             if user is None:
-                messages.info(request, "No account with this address yet – please register.")
+                messages.info(request, _("No account with this address yet – please register."))
                 return redirect(f"{reverse('accounts:register')}?{urlencode({'email': email})}")
-            form.add_error("email", "This account is disabled.")
+            form.add_error("email", _("This account is disabled."))
         else:
             return _send_code(request, user)
     return render(request, "accounts/login.html", {"form": form})
@@ -85,7 +86,7 @@ def code_view(request):
     if form.is_valid():
         if services.verify_code(user, form.cleaned_data["code"]):
             return _finish_login(request, user)
-        form.add_error("code", "This code is wrong or has expired.")
+        form.add_error("code", _("This code is wrong or has expired."))
     return render(request, "accounts/code.html", {"form": form, "email": email})
 
 
@@ -100,7 +101,7 @@ def resend_view(request):
 def link_view(request, secret):
     token = services.find_link_token(secret)
     if token is None or not token.user.is_active:
-        messages.error(request, "This login link is invalid or has expired. Please request a new code.")
+        messages.error(request, _("This login link is invalid or has expired. Please request a new code."))
         return redirect("accounts:login")
     if request.method == "POST":
         services.consume_token(token)

@@ -1,7 +1,7 @@
-<div class="table-wrap">
+{% load i18n %}<div class="table-wrap">
 <table class="standings">
   <thead>
-    <tr><th>#</th><th>Entry</th><th class="num" title="Matches played">M</th><th class="num" title="Won">W</th><th class="num" title="Lost">L</th><th class="num">Sets</th><th class="num">Games</th></tr>
+    <tr><th>#</th><th>{% translate "Entry" %}</th><th class="num" title="{% translate 'Matches played' %}">{% translate "M" context "matches played, column" %}</th><th class="num" title="{% translate 'Won' %}">{% translate "W" context "won, column" %}</th><th class="num" title="{% translate 'Lost' %}">{% translate "L" context "lost, column" %}</th><th class="num">{% translate "Sets" %}</th><th class="num">{% translate "Games" %}</th></tr>
   </thead>
   <tbody>
     {% for row in rows %}
@@ -15,7 +15,7 @@
       <td class="num">{{ row.games_for }}:{{ row.games_against }}</td>
     </tr>
     {% empty %}
-    <tr><td colspan="7" class="muted">No entries yet.</td></tr>
+    <tr><td colspan="7" class="muted">{% translate "No entries yet." %}</td></tr>
     {% endfor %}
   </tbody>
 </table>

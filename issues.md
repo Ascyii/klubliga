@@ -1,1 +1,0 @@
-- Full i18n of the frontend to german

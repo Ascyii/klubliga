@@ -1,19 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Enter code{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Enter code" %}{% endblock %}
 {% block content %}
 <div class="card narrow">
-  <h1>Enter your code</h1>
-  <p class="muted">We emailed a 6-digit code to <strong>{{ email }}</strong>. You can also just tap the link in that email.</p>
+  <h1>{% translate "Enter your code" %}</h1>
+  <p class="muted">{% blocktranslate %}We emailed a 6-digit code to <strong>{{ email }}</strong>. You can also just tap the link in that email.{% endblocktranslate %}</p>
   <form method="post">
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
-    <button type="submit" class="block">Log in</button>
+    <button type="submit" class="block">{% translate "Log in" %}</button>
   </form>
   <div class="spread small" style="margin-top:1rem">
     <form method="post" action="{% url 'accounts:resend' %}" class="inline">
-      {% csrf_token %}<button type="submit" class="secondary small">Send a new code</button>
+      {% csrf_token %}<button type="submit" class="secondary small">{% translate "Send a new code" %}</button>
     </form>
-    <a href="{% url 'accounts:login' %}">Use another address</a>
+    <a href="{% url 'accounts:login' %}">{% translate "Use another address" %}</a>
   </div>
 </div>
 {% endblock %}

@@ -75,7 +75,9 @@ LOGIN_REDIRECT_URL = "league:home"
 # Password-less login: keep devices logged in for a year.
 SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
 
-LANGUAGE_CODE = "en-us"
+# The interface is German; the source strings are English (see locale/).
+LANGUAGE_CODE = "de"
+LOCALE_PATHS = [BASE_DIR / "locale"]
 TIME_ZONE = os.environ.get("DJANGO_TIME_ZONE", "Europe/Berlin")
 USE_I18N = True
 USE_TZ = True

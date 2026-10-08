@@ -83,7 +83,7 @@ class EvaluateTests(SimpleTestCase):
         self.assertEqual(outcome.games, (9, 11))  # tie-break counts as one game
 
     def test_third_set_must_be_tiebreak(self):
-        with self.assertRaisesMessage(ScoreError, "Set 3"):
+        with self.assertRaisesMessage(ScoreError, "Satz 3"):
             evaluate([(6, 4), (3, 6), (6, 4)], DEFAULT)
 
     def test_full_third_set(self):
@@ -93,13 +93,13 @@ class EvaluateTests(SimpleTestCase):
             evaluate([(6, 4), (3, 6), (10, 8)], rules)
 
     def test_too_many_sets(self):
-        with self.assertRaisesMessage(ScoreError, "already decided"):
+        with self.assertRaisesMessage(ScoreError, "schon entschieden"):
             evaluate([(6, 4), (6, 4), (10, 8)], DEFAULT)
 
     def test_not_finished(self):
-        with self.assertRaisesMessage(ScoreError, "not finished"):
+        with self.assertRaisesMessage(ScoreError, "nicht beendet"):
             evaluate([(6, 4)], DEFAULT)
-        with self.assertRaisesMessage(ScoreError, "not finished"):
+        with self.assertRaisesMessage(ScoreError, "nicht beendet"):
             evaluate([(6, 4), (4, 6)], DEFAULT)
 
     def test_empty(self):

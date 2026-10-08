@@ -1,5 +1,5 @@
-{% load static %}<!doctype html>
-<html lang="en">
+{% load static i18n %}{% get_current_language as LANGUAGE_CODE %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,11 +18,11 @@
     {% if user.is_authenticated %}
     <nav class="nav">
       {% with name=request.resolver_match.url_name %}
-      <a href="{% url 'league:home' %}" {% if name == 'home' %}aria-current="page"{% endif %}>Home</a>
-      <a href="{% url 'league:matches' %}" {% if name == 'matches' or name == 'match' %}aria-current="page"{% endif %}>Matches</a>
+      <a href="{% url 'league:home' %}" {% if name == 'home' %}aria-current="page"{% endif %}>{% translate "Home" %}</a>
+      <a href="{% url 'league:matches' %}" {% if name == 'matches' or name == 'match' %}aria-current="page"{% endif %}>{% translate "Matches" %}</a>
       {% if user.is_staff %}
-      <a href="{% url 'league:groups' %}" {% if name == 'groups' %}aria-current="page"{% endif %}>Groups</a>
-      <a href="{% url 'league:settings' %}" {% if name == 'settings' %}aria-current="page"{% endif %}>Settings</a>
+      <a href="{% url 'league:groups' %}" {% if name == 'groups' %}aria-current="page"{% endif %}>{% translate "Groups" %}</a>
+      <a href="{% url 'league:settings' %}" {% if name == 'settings' %}aria-current="page"{% endif %}>{% translate "Settings" %}</a>
       {% endif %}
       {% endwith %}
     </nav>
@@ -39,9 +39,9 @@
   {% if user.is_authenticated %}
   {# Devices stay logged in; logging out is only needed to let someone else use this device. #}
   <footer class="footer small muted">
-    Logged in as {{ user.email }}.
+    {% blocktranslate with email=user.email %}Logged in as {{ email }}.{% endblocktranslate %}
     <form method="post" action="{% url 'accounts:logout' %}" class="inline">
-      {% csrf_token %}<button type="submit" class="link" data-confirm="Log out on this device? To log in again you need a new code by email.">Log out</button>
+      {% csrf_token %}<button type="submit" class="link" data-confirm="{% translate 'Log out on this device? To log in again you need a new code by email.' %}">{% translate "Log out" %}</button>
     </form>
   </footer>
   {% endif %}
