@@ -1,4 +1,3 @@
-- Create a minimal `./Dockerfile` for the project
 - Full i18n of the frontend to german
 - Email codes should not expire for a year
 - Remember the last opened tournament automatically
